@@ -1,0 +1,55 @@
+{
+  "name": "codex-local-model-switcher",
+  "displayName": "Codex Local Model Switcher",
+  "description": "Switch a local Windows Codex VS Code session between GPT and DeepSeek profiles.",
+  "version": "0.1.0",
+  "publisher": "codex-community",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:codexModelSwitcher.local.install",
+    "onCommand:codexModelSwitcher.local.gpt",
+    "onCommand:codexModelSwitcher.local.deepseek",
+    "onCommand:codexModelSwitcher.local.status"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "codexModelSwitcher.local.install",
+        "title": "Codex Local: Install Launcher"
+      },
+      {
+        "command": "codexModelSwitcher.local.gpt",
+        "title": "Codex Local: Switch to GPT"
+      },
+      {
+        "command": "codexModelSwitcher.local.deepseek",
+        "title": "Codex Local: Switch to DeepSeek"
+      },
+      {
+        "command": "codexModelSwitcher.local.status",
+        "title": "Codex Local: Show Current Mode"
+      }
+    ],
+    "configuration": {
+      "title": "Codex Local Model Switcher",
+      "properties": {
+        "codexModelSwitcher.localScript": {
+          "type": "string",
+          "default": "",
+          "description": "Optional absolute path to scripts/local/codex-local-model.ps1."
+        },
+        "codexModelSwitcher.localInstallScript": {
+          "type": "string",
+          "default": "",
+          "description": "Optional absolute path to scripts/local/install-local.ps1."
+        }
+      }
+    }
+  }
+}

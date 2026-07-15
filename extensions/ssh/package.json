@@ -1,0 +1,53 @@
+{
+  "name": "codex-ssh-model-switcher",
+  "displayName": "Codex SSH Model Switcher",
+  "description": "Switch a VS Code Remote - SSH Codex session between GPT and DeepSeek profiles.",
+  "version": "0.1.0",
+  "publisher": "codex-community",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "extensionKind": [
+    "workspace"
+  ],
+  "activationEvents": [
+    "onCommand:codexModelSwitcher.ssh.install",
+    "onCommand:codexModelSwitcher.ssh.gpt",
+    "onCommand:codexModelSwitcher.ssh.deepseek",
+    "onCommand:codexModelSwitcher.ssh.status"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "codexModelSwitcher.ssh.install",
+        "title": "Codex SSH: Install Wrapper"
+      },
+      {
+        "command": "codexModelSwitcher.ssh.gpt",
+        "title": "Codex SSH: Switch to GPT"
+      },
+      {
+        "command": "codexModelSwitcher.ssh.deepseek",
+        "title": "Codex SSH: Switch to DeepSeek"
+      },
+      {
+        "command": "codexModelSwitcher.ssh.status",
+        "title": "Codex SSH: Show Current Mode"
+      }
+    ],
+    "configuration": {
+      "title": "Codex SSH Model Switcher",
+      "properties": {
+        "codexModelSwitcher.sshScript": {
+          "type": "string",
+          "default": "",
+          "description": "Optional absolute path to scripts/ssh/codex-vscode-model.sh on the remote host."
+        }
+      }
+    }
+  }
+}
