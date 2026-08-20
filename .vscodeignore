@@ -1,0 +1,11 @@
+.github/**
+.gitignore
+.gitattributes
+docs/**
+test/**
+assets/social-preview.jpg
+CONTRIBUTING.md
+SECURITY.md
+*.vsix
+npm-debug.log*
+.tmp-vsce-cache/**
