@@ -5,10 +5,32 @@
   "version": "0.2.7",
   "publisher": "hanzaidao",
   "license": "MIT",
+  "icon": "assets/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dzrdzrdzr/codex-model-switcher.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dzrdzrdzr/codex-model-switcher/issues"
+  },
+  "homepage": "https://github.com/dzrdzrdzr/codex-model-switcher#readme",
+  "keywords": [
+    "codex",
+    "deepseek",
+    "openai",
+    "responses-api",
+    "remote-ssh",
+    "model-switcher"
+  ],
+  "galleryBanner": {
+    "color": "#07111f",
+    "theme": "dark"
+  },
   "engines": {
     "vscode": "^1.80.0"
   },
   "categories": [
+    "Machine Learning",
     "Other"
   ],
   "main": "./extension.js",
