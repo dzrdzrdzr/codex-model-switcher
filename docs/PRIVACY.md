@@ -14,7 +14,9 @@ Before publishing a fork or release, verify that the repository does not contain
 Recommended checks:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\check-redaction.ps1
+npm test
+npm run check
+rg -n -i 'sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,}|DEEPSEEK_API_KEY|OPENAI_API_KEY|ANTHROPIC_API_KEY' .
 git status --short
 ```
 

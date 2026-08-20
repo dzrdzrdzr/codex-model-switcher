@@ -1,0 +1,118 @@
+{
+  "name": "codex-local-model-switcher",
+  "displayName": "Codex Direct Source Switcher",
+  "description": "Switch the current local or Remote SSH VS Code Codex between OpenAI and DeepSeek's native Responses API direct profiles.",
+  "version": "0.2.7",
+  "publisher": "hanzaidao",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./extension.js",
+  "extensionKind": [
+    "workspace"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:codexLocalModelSwitcher.switch",
+    "onCommand:codexLocalModelSwitcher.useGpt",
+    "onCommand:codexLocalModelSwitcher.useDeepSeek",
+    "onCommand:codexLocalModelSwitcher.status",
+    "onCommand:codexLocalModelSwitcher.repair",
+    "onCommand:codexModelSwitcher.switch",
+    "onCommand:codexModelSwitcher.useGpt",
+    "onCommand:codexModelSwitcher.useDeepSeek",
+    "onCommand:codexModelSwitcher.status",
+    "onCommand:codexModelSwitcher.repair"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "codexLocalModelSwitcher.switch",
+        "title": "Switch GPT / DeepSeek Direct",
+        "category": "Codex Source"
+      },
+      {
+        "command": "codexLocalModelSwitcher.useGpt",
+        "title": "Use GPT (OpenAI)",
+        "category": "Codex Source"
+      },
+      {
+        "command": "codexLocalModelSwitcher.useDeepSeek",
+        "title": "Use DeepSeek Direct",
+        "category": "Codex Source"
+      },
+      {
+        "command": "codexLocalModelSwitcher.status",
+        "title": "Show Current Codex Source Status",
+        "category": "Codex Source"
+      },
+      {
+        "command": "codexLocalModelSwitcher.repair",
+        "title": "Reapply Current Codex Source Setup",
+        "category": "Codex Source"
+      },
+      {
+        "command": "codexModelSwitcher.switch",
+        "title": "Switch GPT / DeepSeek",
+        "category": "Codex Source"
+      },
+      {
+        "command": "codexModelSwitcher.useGpt",
+        "title": "Use GPT",
+        "category": "Codex Source"
+      },
+      {
+        "command": "codexModelSwitcher.useDeepSeek",
+        "title": "Use DeepSeek",
+        "category": "Codex Source"
+      },
+      {
+        "command": "codexModelSwitcher.status",
+        "title": "Show Current Codex Source Status",
+        "category": "Codex Source"
+      },
+      {
+        "command": "codexModelSwitcher.repair",
+        "title": "Reapply Current Codex Source Setup",
+        "category": "Codex Source"
+      }
+    ],
+    "configuration": {
+      "title": "Codex Direct Source Switcher",
+      "properties": {
+        "codexDirectModelSwitcher.deepSeekModel": {
+          "type": "string",
+          "enum": [
+            "deepseek-v4-pro",
+            "deepseek-v4-flash"
+          ],
+          "default": "deepseek-v4-pro",
+          "description": "DeepSeek model used by the isolated VS Code Codex profile."
+        },
+        "codexDirectModelSwitcher.reasoningEffort": {
+          "type": "string",
+          "enum": [
+            "low",
+            "high",
+            "max"
+          ],
+          "default": "high",
+          "description": "Reasoning effort sent to DeepSeek."
+        },
+        "codexDirectModelSwitcher.remoteSshTarget": {
+          "type": "string",
+          "default": "",
+          "description": "Optional SSH config host override. Normally the current Remote SSH authority is detected automatically."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "test": "node test/config.test.js",
+    "check": "node --check extension.js && node --check lib/config.js"
+  }
+}
