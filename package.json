@@ -1,7 +1,7 @@
 {
   "name": "codex-local-model-switcher",
   "displayName": "Codex DeepSeek Switcher",
-  "description": "Switch VS Code Codex between OpenAI and DeepSeek's native Responses API with isolated local and Remote SSH profiles.",
+  "description": "Switch OpenAI Codex in VS Code, including ChatGPT-authenticated Codex profiles, between OpenAI and DeepSeek with isolated local and Remote SSH configuration.",
   "version": "0.2.7",
   "publisher": "hanzaidao",
   "license": "MIT",
@@ -15,14 +15,20 @@
   },
   "homepage": "https://github.com/dzrdzrdzr/codex-model-switcher#readme",
   "keywords": [
+    "chatgpt",
+    "chatgpt-codex",
+    "openai",
+    "openai-codex",
     "codex",
     "codex-cli",
+    "vscode-codex",
+    "codex-provider",
     "deepseek",
     "deepseek-codex",
-    "openai",
     "responses-api",
     "remote-ssh",
     "model-switcher",
+    "ai-coding-agent",
     "vscode"
   ],
   "galleryBanner": {

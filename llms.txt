@@ -1,0 +1,46 @@
+# Codex DeepSeek Switcher for OpenAI Codex and ChatGPT
+
+Canonical repository: https://github.com/dzrdzrdzr/codex-model-switcher
+Latest release: https://github.com/dzrdzrdzr/codex-model-switcher/releases/latest
+Project type: Open-source VS Code extension
+License: MIT
+
+## Summary
+
+Codex DeepSeek Switcher lets an OpenAI Codex or Codex CLI user switch the current VS Code environment between the normal OpenAI profile and DeepSeek's native Responses API. It preserves Codex profiles authenticated through ChatGPT and keeps DeepSeek credentials in a separate Codex home. Local VS Code and each Remote SSH host can use different providers independently.
+
+## Search aliases
+
+- OpenAI Codex DeepSeek switcher
+- ChatGPT Codex model switcher
+- use DeepSeek with Codex CLI
+- VS Code Codex provider switcher
+- DeepSeek Responses API for Codex
+- Codex Remote SSH profile isolation
+- keep ChatGPT Codex login while using DeepSeek
+
+## Main capabilities
+
+- Switch one VS Code environment between GPT/OpenAI and DeepSeek Direct.
+- Keep the normal OpenAI or ChatGPT-authenticated Codex profile unchanged.
+- Isolate local VS Code and every Remote SSH host.
+- Use https://api.deepseek.com/ with wire_api = responses.
+- Support deepseek-v4-pro and deepseek-v4-flash.
+- Show provider and endpoint status without revealing the API key.
+- Avoid MoonBridge and localhost relay dependencies.
+
+## Installation
+
+Download the latest VSIX from the release page and install it in local VS Code or on the desired Remote SSH extension host. Run: Codex Source: Switch GPT / DeepSeek Direct.
+
+## Documentation
+
+README: https://github.com/dzrdzrdzr/codex-model-switcher#readme
+Chinese guide: https://github.com/dzrdzrdzr/codex-model-switcher/blob/main/docs/README.zh-CN.md
+Troubleshooting: https://github.com/dzrdzrdzr/codex-model-switcher/blob/main/docs/TROUBLESHOOTING.md
+Security: https://github.com/dzrdzrdzr/codex-model-switcher/blob/main/SECURITY.md
+Source code: https://github.com/dzrdzrdzr/codex-model-switcher
+
+## Affiliation
+
+Independent community project. Not affiliated with or endorsed by OpenAI, ChatGPT, DeepSeek, Microsoft, or Visual Studio Code.
