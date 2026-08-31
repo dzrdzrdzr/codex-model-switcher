@@ -1,7 +1,7 @@
 {
   "name": "codex-local-model-switcher",
-  "displayName": "Codex Direct Source Switcher",
-  "description": "Switch the current local or Remote SSH VS Code Codex between OpenAI and DeepSeek's native Responses API direct profiles.",
+  "displayName": "Codex DeepSeek Switcher",
+  "description": "Switch VS Code Codex between OpenAI and DeepSeek's native Responses API with isolated local and Remote SSH profiles.",
   "version": "0.2.7",
   "publisher": "hanzaidao",
   "license": "MIT",
@@ -16,11 +16,14 @@
   "homepage": "https://github.com/dzrdzrdzr/codex-model-switcher#readme",
   "keywords": [
     "codex",
+    "codex-cli",
     "deepseek",
+    "deepseek-codex",
     "openai",
     "responses-api",
     "remote-ssh",
-    "model-switcher"
+    "model-switcher",
+    "vscode"
   ],
   "galleryBanner": {
     "color": "#07111f",
@@ -104,7 +107,7 @@
       }
     ],
     "configuration": {
-      "title": "Codex Direct Source Switcher",
+      "title": "Codex DeepSeek Switcher",
       "properties": {
         "codexDirectModelSwitcher.deepSeekModel": {
           "type": "string",
@@ -135,6 +138,9 @@
   },
   "scripts": {
     "test": "node test/config.test.js",
-    "check": "node --check extension.js && node --check lib/config.js"
+    "test:remote": "bash test/remote-helper.test.sh",
+    "check": "node --check extension.js && node --check lib/config.js",
+    "verify": "npm run check && npm test",
+    "package:vsix": "npx --yes @vscode/vsce@3 package --no-dependencies"
   }
 }

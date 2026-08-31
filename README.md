@@ -1,116 +1,120 @@
-# Codex Direct Source Switcher
+# Codex DeepSeek Switcher
 
-![Codex Direct Source Switcher](https://raw.githubusercontent.com/dzrdzrdzr/codex-model-switcher/main/assets/social-preview.jpg)
+[![CI](https://github.com/dzrdzrdzr/codex-model-switcher/actions/workflows/ci.yml/badge.svg)](https://github.com/dzrdzrdzr/codex-model-switcher/actions/workflows/ci.yml)
+[![Latest release](https://img.shields.io/github/v/release/dzrdzrdzr/codex-model-switcher?display_name=tag)](https://github.com/dzrdzrdzr/codex-model-switcher/releases/latest)
+[![License: MIT](https://img.shields.io/badge/license-MIT-74c7a2)](LICENSE)
+[![VS Code](https://img.shields.io/badge/VS%20Code-local%20%2B%20Remote%20SSH-4aa3ff)](#supported-environments)
 
-[![Version](https://img.shields.io/badge/version-0.2.7-18b6d9?style=flat-square)](https://github.com/dzrdzrdzr/codex-model-switcher/releases)
-[![License: MIT](https://img.shields.io/badge/license-MIT-74c7a2?style=flat-square)](LICENSE)
-[![VS Code](https://img.shields.io/badge/VS%20Code-local-4aa3ff?style=flat-square)](#quick-start)
-[![Remote SSH](https://img.shields.io/badge/Remote%20SSH-supported-4aa3ff?style=flat-square)](#remote-ssh)
-[![DeepSeek](https://img.shields.io/badge/DeepSeek-Responses%20API-00d4ff?style=flat-square)](#verify-deepseek-direct)
+**Switch VS Code Codex between OpenAI and DeepSeek's native Responses API without sharing credentials or configuration between local and Remote SSH environments.**
 
-**Switch VS Code Codex between OpenAI and DeepSeek's official Responses API — directly, with isolated local and Remote SSH profiles.**
+[Download the latest VSIX](https://github.com/dzrdzrdzr/codex-model-switcher/releases/latest) · [中文说明](docs/README.zh-CN.md) · [Troubleshooting](docs/TROUBLESHOOTING.md) · [Report a bug](https://github.com/dzrdzrdzr/codex-model-switcher/issues/new?template=bug_report.yml)
 
-[Download the latest VSIX](https://github.com/dzrdzrdzr/codex-model-switcher/releases/latest) · [中文说明](https://github.com/dzrdzrdzr/codex-model-switcher/blob/main/docs/README.zh-CN.md) · [Report a bug](https://github.com/dzrdzrdzr/codex-model-switcher/issues/new?template=bug_report.yml)
-
-> If this saves you from maintaining a relay or breaking your ChatGPT login, consider starring the repo. It helps other Codex users find it.
-
-Codex Direct Source Switcher gives each VS Code environment its own clean model source switch:
-
-- GPT/OpenAI keeps using the normal Codex profile.
-- DeepSeek uses DeepSeek's native Responses API directly.
-- Local VS Code and Remote SSH can be switched independently.
-- No MoonBridge, no localhost proxy, no protocol disguise.
-
-The extension is built for the setup many power users actually want:
-
-```text
-Codex Desktop  -> OpenAI
-Local VS Code  -> OpenAI or DeepSeek Direct
-Remote SSH     -> OpenAI or DeepSeek Direct, per host
-```
+![Codex DeepSeek Switcher](assets/social-preview.jpg)
 
 ## Why this exists
 
-DeepSeek's official Codex support is great, but the official one-shot setup changes the shared Codex home. That is awkward when your desktop Codex, local VS Code, and SSH VS Code windows need different providers.
+DeepSeek's official Codex setup is convenient for one environment, but it changes the shared Codex home. That becomes fragile when Codex Desktop, local VS Code, and Remote SSH windows need different providers.
 
-This extension keeps the switching local to the current VS Code environment:
+This extension keeps the profiles separate:
 
 ```text
-OpenAI mode   -> .codex
-DeepSeek mode -> .codex-vscode-deepseek
+Codex Desktop  ──> OpenAI profile
+Local VS Code  ──> OpenAI or DeepSeek Direct
+Remote SSH     ──> OpenAI or DeepSeek Direct, independently per host
 ```
 
-That means switching a Remote SSH window to DeepSeek does not steal your desktop ChatGPT login, and switching local VS Code does not rewrite the remote host.
+DeepSeek mode connects directly to:
 
-## Highlights
+```toml
+base_url = "https://api.deepseek.com/"
+wire_api = "responses"
+```
 
-- One command palette switch between `GPT (OpenAI)` and `DeepSeek Direct`.
-- DeepSeek direct config uses `https://api.deepseek.com/` and `wire_api = "responses"`.
-- Bundles the official DeepSeek model catalog for `deepseek-v4-pro` and `deepseek-v4-flash`.
-- Keeps API key auth isolated in the DeepSeek profile.
-- Works in local VS Code and Linux Remote SSH extension hosts.
-- Preserves old command ids for smoother upgrades from earlier local switcher builds.
-- Avoids passing API keys on the process command line or printing them to the output channel.
+No MoonBridge, localhost relay, protocol disguise, or shared API-key file is required.
 
-## Quick start
+## What it does
 
-1. Download `codex-direct-model-switcher-0.2.7.vsix` from the [latest release](https://github.com/dzrdzrdzr/codex-model-switcher/releases/latest).
-2. Install it in the VS Code environment you want to control.
+- Switches the current VS Code environment between **GPT (OpenAI)** and **DeepSeek Direct**.
+- Keeps local VS Code and every Remote SSH extension host independently configurable.
+- Creates an isolated DeepSeek Codex home instead of overwriting the normal OpenAI profile.
+- Supports `deepseek-v4-pro` and `deepseek-v4-flash`.
+- Detects and avoids older relay wrappers when the real Codex binary is available.
+- Shows the active provider, model, endpoint, wire API, and Codex version without printing the API key.
+- Preserves legacy command IDs so upgrades from earlier builds remain usable.
 
-Local VS Code:
+## Installation
+
+### Local VS Code
+
+1. Download the `.vsix` file from the [latest release](https://github.com/dzrdzrdzr/codex-model-switcher/releases/latest).
+2. Install it:
 
 ```powershell
 code --install-extension .\codex-direct-model-switcher-0.2.7.vsix --force
 ```
 
-Remote SSH:
+The filename changes with each release; use the file you downloaded.
+
+### Remote SSH
+
+Install the VSIX on the remote extension host, not only in the local VS Code window:
 
 ```powershell
-code --remote ssh-remote+your-host --install-extension .\codex-direct-model-switcher-0.2.7.vsix --force
+code --remote ssh-remote+your-host `
+  --install-extension .\codex-direct-model-switcher-0.2.7.vsix `
+  --force
 ```
 
-3. Open the command palette and run `Codex Source: Switch GPT / DeepSeek Direct`.
-4. Reload that VS Code window when prompted.
+Alternatively, connect to the host, open **Extensions: Install from VSIX...**, and confirm the extension is installed under **SSH: your-host**.
 
-The first DeepSeek setup asks for a DeepSeek API key using VS Code's password input. The key stays in that environment's isolated Codex profile.
+## Quick start
 
-## How it works
+Open the command palette and run:
 
-| Environment | OpenAI mode | DeepSeek mode |
+```text
+Codex Source: Switch GPT / DeepSeek Direct
+```
+
+The first DeepSeek setup asks for an API key through VS Code's password input. Reload the current window when prompted.
+
+Useful commands:
+
+| Command | Purpose |
+| --- | --- |
+| `Codex Source: Switch GPT / DeepSeek Direct` | Toggle the current environment |
+| `Codex Source: Use GPT (OpenAI)` | Restore the normal OpenAI profile |
+| `Codex Source: Use DeepSeek Direct` | Activate the isolated DeepSeek profile |
+| `Codex Source: Show Current Codex Source Status` | Verify provider, endpoint, model, and Codex version |
+| `Codex Source: Reapply Current Codex Source Setup` | Repair the launcher or profile files |
+
+## How isolation works
+
+| Environment | OpenAI profile | DeepSeek profile |
 | --- | --- | --- |
-| Local VS Code | `%USERPROFILE%\.codex` | `%USERPROFILE%\.codex-vscode-deepseek` |
-| Remote SSH | `~/.codex` | `~/.codex-vscode-deepseek` |
-| API path | OpenAI / ChatGPT auth | `https://api.deepseek.com/` with `wire_api = "responses"` |
+| Local Windows | `%USERPROFILE%\.codex` | `%USERPROFILE%\.codex-vscode-deepseek` |
+| Remote SSH / Linux | `~/.codex` | `~/.codex-vscode-deepseek` |
 
-Each VS Code extension host owns its mode. A Remote SSH window can use DeepSeek while local VS Code and Codex Desktop continue using OpenAI.
+The extension sets VS Code Codex's `chatgpt.cliExecutable` to a small environment-local launcher. That launcher chooses the correct Codex home before starting Codex.
 
-## What it changes
+Switching a remote host therefore does not take over the local VS Code window or Codex Desktop login.
 
-Local VS Code:
+## Verify direct mode
 
-```text
-%USERPROFILE%\.codex
-%USERPROFILE%\.codex-vscode-deepseek
-```
-
-Remote SSH:
+Run `Codex Source: Show Current Codex Source Status`. DeepSeek mode should report values equivalent to:
 
 ```text
-~/.codex
-~/.codex-vscode-deepseek
-~/.local/bin/codex-vscode-profile
+mode: deepseek
+provider: deepseek
+base_url: https://api.deepseek.com/
+wire_api: responses
+direct: true
 ```
 
-The extension sets VS Code Codex's `chatgpt.cliExecutable` to `codex-vscode-profile`, a tiny launcher that selects the right profile before Codex starts.
-
-## Verify DeepSeek Direct
-
-DeepSeek mode should contain:
+The generated profile should contain:
 
 ```toml
 model = "deepseek-v4-pro"
 model_provider = "deepseek"
-model_catalog_json = "/home/you/.codex-vscode-deepseek/models.json"
 
 [model_providers.deepseek]
 name = "deepseek"
@@ -118,7 +122,7 @@ base_url = "https://api.deepseek.com/"
 wire_api = "responses"
 ```
 
-It should not contain or depend on:
+It should not depend on:
 
 ```text
 127.0.0.1:38440
@@ -126,36 +130,48 @@ localhost
 moonbridge
 ```
 
-## Remote SSH
+## Supported environments
 
-- Install the VSIX on the remote side, not only in local VS Code.
-- The remote helper requires Linux, `bash`, and `python3`.
-- The generated launcher is `~/.local/bin/codex-vscode-profile`.
-- If an old relay wrapper is present, the launcher prefers `codex.real` so traffic does not fall back through MoonBridge.
-
-Run `Codex Source: Show Current Codex Source Status` to confirm the active mode, model, provider, Responses wire API, and Codex version without printing the API key.
-
-## Compatibility
-
-| Component | Support |
+| Component | Status |
 | --- | --- |
 | Local VS Code on Windows | Supported |
 | VS Code Remote SSH to Linux | Supported |
 | Codex CLI | `0.144.0` or newer recommended |
+| Remote prerequisites | Linux, `bash`, and `python3` |
 | DeepSeek models | `deepseek-v4-pro`, `deepseek-v4-flash` |
-| MoonBridge / localhost proxy | Not used |
 
-## Security
+## Security boundaries
 
-On first DeepSeek setup in each environment, the extension asks for a DeepSeek API key with VS Code's password input. The key is stored only in that environment's isolated DeepSeek `config.toml` as DeepSeek's official Codex setup expects.
+- API keys are not placed on the process command line or printed to the output channel.
+- The DeepSeek key is written only to that environment's isolated DeepSeek profile, matching DeepSeek's official Codex configuration model.
+- The extension does not copy the key into the OpenAI profile.
+- No local configuration is uploaded to this repository.
+- Issue reports should contain redacted status output only.
 
-The extension does not print the key, put it on a command line, copy it into the OpenAI profile, or upload any local config to GitHub.
+See [Privacy](docs/PRIVACY.md) and [Security](SECURITY.md).
 
 ## Development
 
 ```powershell
-npm test
-npm run check
+npm run verify
 ```
 
-Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) and keep provider credentials out of issues, logs, and test fixtures.
+On Linux, also run:
+
+```bash
+npm run test:remote
+```
+
+Create a local VSIX:
+
+```bash
+npm run package:vsix
+```
+
+Pull requests run syntax checks, unit tests, Remote SSH helper tests, and a packaging smoke test.
+
+## Contributing
+
+Bug reports and focused pull requests are welcome. Include the operating system, local or Remote SSH context, Codex version, extension version, and redacted status output.
+
+If the extension solves your multi-provider setup, starring the repository helps other Codex users find it.

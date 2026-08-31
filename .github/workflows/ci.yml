@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  node:
+    name: Node checks (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm run check
+      - run: npm test
+
+  remote-helper:
+    name: Remote helper tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash test/remote-helper.test.sh
+
+  package:
+    name: VSIX packaging smoke test
+    runs-on: ubuntu-latest
+    needs: [node, remote-helper]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: mkdir -p dist
+      - run: npx --yes @vscode/vsce@3 package --no-dependencies --out dist/codex-deepseek-switcher.vsix
+      - uses: actions/upload-artifact@v4
+        with:
+          name: codex-deepseek-switcher-vsix
+          path: dist/codex-deepseek-switcher.vsix
