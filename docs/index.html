@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Codex DeepSeek Switcher for OpenAI Codex and ChatGPT | VS Code</title>
+  <meta name="description" content="Switch OpenAI Codex and ChatGPT-authenticated Codex profiles in VS Code between OpenAI and DeepSeek. Isolated local and Remote SSH Codex configuration, no MoonBridge or localhost relay.">
+  <meta name="keywords" content="OpenAI Codex, ChatGPT Codex, Codex CLI, DeepSeek Codex, VS Code Codex, Codex model switcher, Codex provider switcher, Remote SSH, Responses API">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <link rel="canonical" href="https://dzrdzrdzr.github.io/codex-model-switcher/">
+  <link rel="sitemap" type="application/xml" href="sitemap.xml">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Codex DeepSeek Switcher for OpenAI Codex and ChatGPT">
+  <meta property="og:description" content="Use OpenAI or DeepSeek with Codex in VS Code while keeping ChatGPT login and Remote SSH profiles isolated.">
+  <meta property="og:url" content="https://dzrdzrdzr.github.io/codex-model-switcher/">
+  <meta property="og:image" content="https://raw.githubusercontent.com/dzrdzrdzr/codex-model-switcher/main/assets/social-preview.jpg">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Codex DeepSeek Switcher",
+    "alternateName": [
+      "OpenAI Codex DeepSeek Switcher",
+      "ChatGPT Codex Model Switcher",
+      "VS Code Codex Provider Switcher"
+    ],
+    "description": "A VS Code extension that switches OpenAI Codex and ChatGPT-authenticated Codex profiles between OpenAI and DeepSeek while isolating local and Remote SSH configuration.",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Windows, Linux, VS Code Remote SSH",
+    "softwareRequirements": "Visual Studio Code and OpenAI Codex / Codex CLI",
+    "url": "https://dzrdzrdzr.github.io/codex-model-switcher/",
+    "codeRepository": "https://github.com/dzrdzrdzr/codex-model-switcher",
+    "downloadUrl": "https://github.com/dzrdzrdzr/codex-model-switcher/releases/latest",
+    "license": "https://opensource.org/license/mit",
+    "keywords": "OpenAI Codex, ChatGPT Codex, Codex CLI, DeepSeek, VS Code, Remote SSH, Responses API",
+    "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
+  }
+  </script>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+    body { margin: 0; background: #07111f; color: #e8f2ff; line-height: 1.65; }
+    main { max-width: 920px; margin: auto; padding: 56px 24px 80px; }
+    h1 { font-size: clamp(2.2rem, 6vw, 4.6rem); line-height: 1.04; margin: 0 0 20px; }
+    h2 { margin-top: 48px; }
+    a { color: #57c7ff; }
+    .lead { font-size: 1.25rem; color: #bdd5ec; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0; }
+    .button { display: inline-block; padding: 11px 16px; border: 1px solid #57c7ff; border-radius: 9px; text-decoration: none; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
+    .card { padding: 18px; border: 1px solid #23415e; border-radius: 12px; background: #0c1b2c; }
+    code, pre { background: #0b1725; border-radius: 6px; }
+    pre { padding: 16px; overflow: auto; }
+    footer { margin-top: 56px; color: #8ca6bf; font-size: .95rem; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Codex DeepSeek Switcher</h1>
+  <p class="lead">Switch OpenAI Codex in VS Code—including Codex profiles authenticated through ChatGPT—between OpenAI and DeepSeek without mixing local, Remote SSH, or provider credentials.</p>
+  <div class="actions">
+    <a class="button" href="https://github.com/dzrdzrdzr/codex-model-switcher/releases/latest">Download VSIX</a>
+    <a class="button" href="https://github.com/dzrdzrdzr/codex-model-switcher">View source</a>
+    <a class="button" href="https://github.com/dzrdzrdzr/codex-model-switcher/blob/main/docs/README.zh-CN.md">中文说明</a>
+  </div>
+
+  <h2>What problem does it solve?</h2>
+  <div class="grid">
+    <section class="card"><h3>Use DeepSeek with Codex</h3><p>Connect Codex directly to DeepSeek's Responses API from one VS Code environment.</p></section>
+    <section class="card"><h3>Keep ChatGPT login intact</h3><p>The normal OpenAI or ChatGPT-authenticated Codex profile stays separate from the DeepSeek API-key profile.</p></section>
+    <section class="card"><h3>Isolate Remote SSH hosts</h3><p>Local VS Code and every remote extension host select their provider independently.</p></section>
+  </div>
+
+  <h2>Direct provider configuration</h2>
+  <pre><code>model_provider = "deepseek"
+
+[model_providers.deepseek]
+base_url = "https://api.deepseek.com/"
+wire_api = "responses"</code></pre>
+  <p>No MoonBridge, localhost relay, or protocol disguise is required.</p>
+
+  <h2>Frequently asked questions</h2>
+  <h3>How can I use DeepSeek with OpenAI Codex in VS Code?</h3>
+  <p>Install the VSIX and run <code>Codex Source: Use DeepSeek Direct</code>.</p>
+  <h3>Can I keep using my ChatGPT-authenticated Codex profile?</h3>
+  <p>Yes. The extension leaves the normal <code>.codex</code> profile intact and writes DeepSeek configuration to <code>.codex-vscode-deepseek</code>.</p>
+  <h3>Does it work with Codex CLI over Remote SSH?</h3>
+  <p>Yes. Install the extension on the remote extension host; each host has its own mode, launcher, and isolated profile.</p>
+
+  <h2>Canonical resources</h2>
+  <p><a href="https://github.com/dzrdzrdzr/codex-model-switcher">GitHub repository</a> · <a href="https://github.com/dzrdzrdzr/codex-model-switcher/releases/latest">Latest release</a> · <a href="llms.txt">Machine-readable summary</a> · <a href="https://github.com/dzrdzrdzr/codex-model-switcher/blob/main/SECURITY.md">Security</a></p>
+
+  <footer>Independent community project. Not affiliated with or endorsed by OpenAI, ChatGPT, DeepSeek, Microsoft, or Visual Studio Code.</footer>
+</main>
+</body>
+</html>

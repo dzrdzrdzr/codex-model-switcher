@@ -1,0 +1,11 @@
+# Codex DeepSeek Switcher for OpenAI Codex and ChatGPT
+
+Canonical page: https://dzrdzrdzr.github.io/codex-model-switcher/
+Canonical source: https://github.com/dzrdzrdzr/codex-model-switcher
+Download: https://github.com/dzrdzrdzr/codex-model-switcher/releases/latest
+
+A VS Code extension that switches OpenAI Codex / Codex CLI between OpenAI and DeepSeek while preserving ChatGPT-authenticated Codex profiles and isolating every local or Remote SSH environment.
+
+Search aliases: OpenAI Codex DeepSeek switcher; ChatGPT Codex model switcher; VS Code Codex provider switcher; use DeepSeek with Codex CLI; Codex Remote SSH profile isolation.
+
+Independent community project; not affiliated with OpenAI, ChatGPT, DeepSeek, Microsoft, or Visual Studio Code.
