@@ -75,6 +75,8 @@ test -n "$(find "$HOME/.codex-vscode-deepseek" -maxdepth 1 -name 'auth.json.befo
 test ! -e "$HOME/.codex/config.toml.before-direct.bak"
 DEEPSEEK_RESULT="$("$HOME/.vscode-server/cli/servers/Stable-test/server/bin/remote-cli/codex-vscode-profile" deepseek-check)"
 grep -Fq "CODEX_HOME=$HOME/.codex-vscode-deepseek" <<< "$DEEPSEEK_RESULT"
-grep -Fq 'ARGS=deepseek-check' <<< "$DEEPSEEK_RESULT"
+grep -Fq 'model=deepseek-v4-pro' <<< "$DEEPSEEK_RESULT"
+grep -Fq 'model_reasoning_effort=high' <<< "$DEEPSEEK_RESULT"
+grep -Fq 'deepseek-check' <<< "$DEEPSEEK_RESULT"
 
 printf 'remote_helper_test_root: %s\n' "$TEST_ROOT"
