@@ -27,7 +27,7 @@ jobs:
       RELEASE_SHA: 30f584d0019453f15f40bc58fca5d1cfd327a93c
       VSIX_NAME: codex-local-model-switcher-0.2.8.vsix
       VSIX_SHA256: 9743ea149a03f33e362d8d9ac22e12e1a4163b32e40df1dac615e312f4f903f2
-      PACKAGE_DIR: ${{ runner.temp }}/switcher-marketplace
+      PACKAGE_DIR: ${{ github.workspace }}/.marketplace-resume
     defaults:
       run:
         shell: bash
@@ -142,5 +142,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: marketplace-resume-evidence
-          path: ${{ runner.temp }}/switcher-marketplace/marketplace-*.json
+          path: ${{ github.workspace }}/.marketplace-resume/marketplace-*.json
           if-no-files-found: ignore
