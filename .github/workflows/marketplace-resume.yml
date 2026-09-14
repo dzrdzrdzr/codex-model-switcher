@@ -1,0 +1,146 @@
+name: Resume Marketplace 0.2.8
+
+# This resumes only the already approved release; it never creates a release.
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_publish:
+        description: 'Upload the verified, already released 0.2.8 VSIX to the existing dzr extension'
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-approved
+  cancel-in-progress: false
+
+jobs:
+  marketplace:
+    if: ${{ github.repository == 'dzrdzrdzr/codex-model-switcher' && github.ref == 'refs/heads/main' && inputs.confirm_publish }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      RELEASE_TAG: v0.2.8
+      RELEASE_SHA: 30f584d0019453f15f40bc58fca5d1cfd327a93c
+      VSIX_NAME: codex-local-model-switcher-0.2.8.vsix
+      VSIX_SHA256: 9743ea149a03f33e362d8d9ac22e12e1a4163b32e40df1dac615e312f4f903f2
+      PACKAGE_DIR: ${{ runner.temp }}/switcher-marketplace
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Require existing publisher authorization
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: |
+          if [ -z "$VSCE_PAT" ]; then
+            echo '::error::Marketplace was not updated: publisher authorization VSCE_PAT is not configured.'
+            echo 'Not published: missing Marketplace publisher authorization.' >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+        with:
+          ref: '30f584d0019453f15f40bc58fca5d1cfd327a93c'
+          path: release-source
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Download the existing release, without rebuilding or replacing it
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$PACKAGE_DIR"
+          gh api "repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG" > "$PACKAGE_DIR/release.json"
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          release = json.loads((Path(os.environ['PACKAGE_DIR'])/'release.json').read_text())
+          if release.get('draft') is not False or release.get('prerelease') is not False:
+              raise SystemExit('Only the existing public stable release may be resumed.')
+          if release.get('tag_name') != os.environ['RELEASE_TAG'] or release.get('target_commitish') != os.environ['RELEASE_SHA']:
+              raise SystemExit('Published release tag or source revision changed; refusing upload.')
+          matches = [a for a in release.get('assets', []) if a.get('name') == os.environ['VSIX_NAME']]
+          if len(matches) != 1 or matches[0].get('state') != 'uploaded':
+              raise SystemExit('Expected released VSIX asset is missing or ambiguous.')
+          digest = matches[0].get('digest')
+          if digest and digest != 'sha256:' + os.environ['VSIX_SHA256']:
+              raise SystemExit('Published asset digest differs from the approved artifact.')
+          PY
+          gh release download "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" \
+            --pattern "$VSIX_NAME" --pattern SHA256SUMS --dir "$PACKAGE_DIR"
+          (cd "$PACKAGE_DIR" && printf '%s  %s\n' "$VSIX_SHA256" "$VSIX_NAME" | sha256sum --check -)
+          python3 release-source/scripts/verify-vsix.py "$PACKAGE_DIR/$VSIX_NAME"
+
+      - name: Inspect the existing Marketplace extension
+        id: preflight
+        run: |
+          set -euo pipefail
+          python3 release-source/scripts/marketplace-check.py --output "$PACKAGE_DIR/marketplace-before.json"
+          python3 - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          status = json.loads((Path(os.environ['PACKAGE_DIR'])/'marketplace-before.json').read_text())
+          if status.get('status') != 'found' or status.get('extension_id') != 'dzr.codex-local-model-switcher':
+              raise SystemExit('Existing extension was not verified. Do not create another extension.')
+          version = status.get('published_version', '')
+          if not re.fullmatch(r'\d+\.\d+\.\d+', version):
+              raise SystemExit('Marketplace version is unavailable or invalid.')
+          current = tuple(map(int, version.split('.')))
+          expected = (0, 2, 8)
+          if current > expected:
+              raise SystemExit('Marketplace is newer than 0.2.8; refusing to downgrade.')
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as output:
+              output.write('publish=' + ('true' if current < expected else 'false') + '\n')
+          if current == expected:
+              print('0.2.8 is already present; no upload will be attempted.')
+          PY
+
+      - name: Upload the exact verified release asset
+        if: ${{ steps.preflight.outputs.publish == 'true' }}
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: |
+          set -euo pipefail
+          VSCE_VERSION="$(node -p 'require("./release-source/package.json").buildTools.vsce')"
+          [[ "$VSCE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit 1
+          npx --yes "@vscode/vsce@${VSCE_VERSION}" publish --packagePath "$PACKAGE_DIR/$VSIX_NAME" </dev/null
+
+      - name: Verify the public version and downloadable package
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4 5; do
+            python3 release-source/scripts/marketplace-check.py --download --output "$PACKAGE_DIR/marketplace-after.json"
+            if python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          status = json.loads((Path(os.environ['PACKAGE_DIR'])/'marketplace-after.json').read_text())
+          verified = (status.get('status') == 'found' and status.get('published_version') == '0.2.8'
+                      and status.get('published_binary_verified') is True)
+          raise SystemExit(0 if verified else 1)
+          PY
+            then
+              echo 'Public Marketplace version and downloaded package verified: dzr.codex-local-model-switcher 0.2.8.' >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            if [ "$attempt" -lt 5 ]; then sleep 10; fi
+          done
+          echo '::error::The public 0.2.8 package was not verified; processing or an error may remain. Do not report completion.'
+          exit 1
+
+      - name: Save non-secret publication evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: marketplace-resume-evidence
+          path: ${{ runner.temp }}/switcher-marketplace/marketplace-*.json
+          if-no-files-found: ignore
