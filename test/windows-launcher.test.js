@@ -67,7 +67,7 @@ describe('Compiled Windows launcher on disposable runner', {
   test('default OpenAI home, current directory and inherited stdin are correct', () => {
     const r = run(['--echo-stdin'], {}, 'fixture input 中文\n');
     assert.equal(r.status, 0, r.stderr);
-    assert.equal(r.fields.HOME, gptHome); assert.equal(r.fields.CWD, temp);
+    assert.equal(r.fields.HOME, gptHome); assert.equal(fs.realpathSync.native(r.fields.CWD).toLowerCase(), fs.realpathSync.native(temp).toLowerCase());
     assert.equal(r.fields.INPUT, 'fixture input 中文\n');
   });
   test('spaces, Unicode, empty values, quotes and trailing backslashes round-trip', () => {

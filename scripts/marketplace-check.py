@@ -3,6 +3,7 @@
 import argparse
 import datetime
 import io
+import gzip
 import json
 from pathlib import Path
 import urllib.error
@@ -55,9 +56,15 @@ def main():
                 candidate_strictly_newer=version_tuple(candidate)>version_tuple(version))
             if args.download:
                 try:
-                    with urllib.request.urlopen(PACKAGE_URL, timeout=45) as response:
+                    download_url = latest.get('assetUri', '').rstrip('/') + '/Microsoft.VisualStudio.Services.VSIXPackage' if latest.get('assetUri') else PACKAGE_URL.replace('/latest/', '/'+version+'/')
+                    package_request = urllib.request.Request(download_url, headers={'Accept-Encoding': 'identity', 'User-Agent': 'codex-model-switcher-release-check'})
+                    with urllib.request.urlopen(package_request, timeout=45) as response:
                         raw = response.read(16*1024*1024 + 1)
                     if len(raw)>16*1024*1024: raise ValueError('Unexpectedly large package')
+                    if raw[:2] == b'\x1f\x8b':
+                        with gzip.GzipFile(fileobj=io.BytesIO(raw)) as compressed:
+                            raw = compressed.read(16*1024*1024 + 1)
+                        if len(raw)>16*1024*1024: raise ValueError('Unexpectedly large decompressed package')
                     with zipfile.ZipFile(io.BytesIO(raw)) as archive:
                         package = json.loads(archive.read('extension/package.json'))
                     if package['publisher']+'.'+package['name'] != IDENTITY or package['version'] != version:
