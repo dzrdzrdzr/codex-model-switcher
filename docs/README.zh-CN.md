@@ -2,7 +2,9 @@
 
 **在 VS Code Codex 中切换 OpenAI / DeepSeek，不必反复手改模型来源配置。** 原有 Codex 与 DeepSeek 使用不同配置目录；Windows 本地与拥有独立主目录的 Linux SSH 账户分别保存选择。
 
-[商店安装](https://marketplace.visualstudio.com/items?itemName=dzr.codex-local-model-switcher) · [已发布 VSIX](https://github.com/dzrdzrdzr/codex-model-switcher/releases/latest) · [English](../README.md) · [故障排查](TROUBLESHOOTING.md)
+[下载 v0.2.8 VSIX](https://github.com/dzrdzrdzr/codex-model-switcher/releases/tag/v0.2.8) · [商店页面](https://marketplace.visualstudio.com/items?itemName=dzr.codex-local-model-switcher) · [English](../README.md) · [故障排查](TROUBLESHOOTING.md)
+
+> **发布状态（2026-09-14）：** v0.2.8 已在 GitHub 正式发布。核对时商店仍为 v0.2.7，更新尚缺发布者授权；安装 v0.2.8 请使用 GitHub 的 VSIX。网站已经构建，但尚未部署上线。详见[实际发布结果](PUBLICATION-STATUS.md)。
 
 ## 先理解隔离范围
 
@@ -17,13 +19,19 @@ DeepSeek → .codex-vscode-deepseek DeepSeek → .codex-vscode-deepseek
 
 ## 安装
 
-扩展名称为 **Codex DeepSeek Switcher**，商店 ID 为 **`dzr.codex-local-model-switcher`**：
+安装 **v0.2.8**：从 [GitHub Release](https://github.com/dzrdzrdzr/codex-model-switcher/releases/tag/v0.2.8) 下载 `codex-local-model-switcher-0.2.8.vsix`，在扩展面板选择 **Extensions: Install from VSIX...（从 VSIX 安装）**，或运行：
+
+```powershell
+code --install-extension .\codex-local-model-switcher-0.2.8.vsix
+```
+
+扩展名称仍为 **Codex DeepSeek Switcher**，商店 ID 仍为 **`dzr.codex-local-model-switcher`**。下面的命令安装商店当前已发布版本，可能落后于 GitHub：
 
 ```powershell
 code --install-extension dzr.codex-local-model-switcher
 ```
 
-远程使用时，先连接 SSH，在扩展面板的 **SSH: 主机名** 下安装本扩展与 OpenAI Codex 扩展 `openai.chatgpt`；只装在 Local 下不够。商店用于安装已发布版本，GitHub Release 的 VSIX 是备用入口，文件名以实际下载结果为准。开发分支版本不代表商店已经同步更新。
+远程使用时，先连接 SSH，在扩展面板的 **SSH: 主机名** 下安装本扩展与 OpenAI Codex 扩展 `openai.chatgpt`；只装在 Local 下不够。安装包文件名以实际下载结果为准，开发分支版本或 GitHub 发布不代表商店已经同步更新。
 
 历史 VSIX 的 ID 是 `hanzaidao.codex-local-model-switcher`。迁移时先禁用旧扩展，再启用 `dzr.codex-local-model-switcher`，避免两个切换器同时运行；不要为迁移而删除 `.codex` 或密钥文件。本轮保留原有命令 ID，详细身份差异见[发布说明](PUBLISHING.md)。
 
@@ -41,7 +49,7 @@ Windows 本地实现面向 x64，需要 VS Code ≥1.80、同一扩展宿主中�
 
 应先初始化 Codex，存在 `.codex/config.toml`；只有默认配置适合你的情况时，空文件才足够。启动器定位的是 Codex 扩展附带的二进制，不是任意 PATH 上的 `codex`。当前启动器固定使用用户主目录下的配置，不保留自定义 `CODEX_HOME` 布局。
 
-**本地 macOS/Linux、WSL、Dev Containers、Codespaces 和网页版 VS Code 不在当前支持范围。** 自动化测试使用临时目录和模拟 Codex，不等于所有平台、所有版本都经过真实模型调用验证。见[验证记录](VALIDATION.md)。
+**本地 macOS/Linux、WSL、Dev Containers、Codespaces 和网页版 VS Code 不在当前支持范围。** 自动化测试使用临时目录和模拟 Codex，不等于所有平台、所有版本都经过真实模型调用验证；Windows 测试另行实际编译并执行 C# 启动器。见[验证记录](VALIDATION.md)。
 
 ## 凭据与费用
 

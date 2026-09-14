@@ -2,7 +2,9 @@
 
 **Switch OpenAI / DeepSeek in VS Code Codex without repeatedly editing provider settings.** Keep the normal Codex profile separate from a DeepSeek profile on Windows or a Linux Remote SSH account.
 
-[Install from Marketplace](https://marketplace.visualstudio.com/items?itemName=dzr.codex-local-model-switcher) · [Download a released VSIX](https://github.com/dzrdzrdzr/codex-model-switcher/releases/latest) · [中文](docs/README.zh-CN.md) · [Troubleshooting](docs/TROUBLESHOOTING.md)
+[Download v0.2.8 VSIX](https://github.com/dzrdzrdzr/codex-model-switcher/releases/tag/v0.2.8) · [Marketplace](https://marketplace.visualstudio.com/items?itemName=dzr.codex-local-model-switcher) · [中文](docs/README.zh-CN.md) · [Troubleshooting](docs/TROUBLESHOOTING.md)
+
+> **Distribution status — 2026-09-14:** v0.2.8 is publicly released on GitHub. Marketplace was verified at v0.2.7; its update is pending publisher authorization. Use the GitHub VSIX for v0.2.8. The website is built but is not deployed; no live Pages site is claimed. [Publication results](docs/PUBLICATION-STATUS.md).
 
 ![CI](https://github.com/dzrdzrdzr/codex-model-switcher/actions/workflows/ci.yml/badge.svg)
 
@@ -19,7 +21,13 @@ This is a **configuration illustration, not a live API demonstration**. Windows 
 
 ## Install
 
-Install **Codex DeepSeek Switcher**, extension ID **`dzr.codex-local-model-switcher`**:
+For **v0.2.8**, download `codex-local-model-switcher-0.2.8.vsix` from the [GitHub release](https://github.com/dzrdzrdzr/codex-model-switcher/releases/tag/v0.2.8), then run **Extensions: Install from VSIX...**, or:
+
+```powershell
+code --install-extension .\codex-local-model-switcher-0.2.8.vsix
+```
+
+The Marketplace extension ID remains **`dzr.codex-local-model-switcher`**. The following command installs the version currently published to Marketplace, which may lag behind GitHub:
 
 ```powershell
 code --install-extension dzr.codex-local-model-switcher
@@ -27,7 +35,7 @@ code --install-extension dzr.codex-local-model-switcher
 
 For Remote SSH, connect first and install under **SSH: your-host**, not only under Local. Install the OpenAI Codex extension (`openai.chatgpt`) on the same extension host. The [Remote SSH guide](docs/guides.md#remote-ssh) explains the distinction.
 
-Prefer Marketplace for published builds. GitHub Releases is the VSIX alternative; use the actual downloaded filename. A development branch version is not proof that the same version is published. Older VSIX builds identify as `hanzaidao.codex-local-model-switcher`: disable that old extension before enabling `dzr.codex-local-model-switcher`, so two switchers do not run together. Neither installing a new ID nor switching back automatically removes old keys or backups. See [distribution notes](docs/PUBLISHING.md).
+Older VSIX builds identify as `hanzaidao.codex-local-model-switcher`: disable that old extension before enabling `dzr.codex-local-model-switcher`, so two switchers do not run together. Neither installing a new ID nor switching back automatically removes old keys or backups. See [distribution notes](docs/PUBLISHING.md).
 
 ## Switch in three steps
 
@@ -69,7 +77,7 @@ npm run package:list
 npm run package:vsix
 ```
 
-Packaging uses the exact tool version in `package.json`; no runtime dependency is added. CI checks Windows/Linux JavaScript tests, Linux helper integration, static links and VSIX contents. The website is built locally into `_site/`; its deployment workflow is manual and is not proof of a live website.
+Packaging uses the exact tool version in `package.json`; no runtime dependency is added. CI checks Windows/Linux JavaScript tests, actual Windows launcher compilation/execution against a probe, Linux helper integration, static links and VSIX contents. The website is built locally into `_site/`; a successful build is not proof of a live website.
 
 Source and MIT license are available in this repository. A star is welcome when the tool is useful; there are no star prompts in the extension or star-gated features. Statistics collection is an optional maintainer command, not user telemetry.
 
