@@ -2,9 +2,9 @@
 
 **在 VS Code Codex 中切换 OpenAI / DeepSeek，不必反复手改模型来源配置。** 原有 Codex 与 DeepSeek 使用不同配置目录；Windows 本地与拥有独立主目录的 Linux SSH 账户分别保存选择。
 
-[下载 v0.2.8 VSIX](https://github.com/dzrdzrdzr/codex-model-switcher/releases/tag/v0.2.8) · [商店页面](https://marketplace.visualstudio.com/items?itemName=dzr.codex-local-model-switcher) · [English](../README.md) · [故障排查](TROUBLESHOOTING.md)
+[项目网站](https://dzrdzrdzr.github.io/codex-model-switcher/zh/index.html) · [下载 v0.2.8 VSIX](https://github.com/dzrdzrdzr/codex-model-switcher/releases/tag/v0.2.8) · [商店页面](https://marketplace.visualstudio.com/items?itemName=dzr.codex-local-model-switcher) · [English](../README.md) · [故障排查](TROUBLESHOOTING.md)
 
-> **发布状态（2026-09-14）：** v0.2.8 已在 GitHub 正式发布。核对时商店仍为 v0.2.7，更新尚缺发布者授权；安装 v0.2.8 请使用 GitHub 的 VSIX。网站已经构建，但尚未部署上线。详见[实际发布结果](PUBLICATION-STATUS.md)。
+> **发布状态（2026-09-14）：** v0.2.8 已在 GitHub 正式发布。核对时商店仍为 v0.2.7，更新尚缺发布者授权；安装 v0.2.8 请使用 GitHub 的 VSIX。中英文网站已在 GitHub Pages 上线，已核对线上页面和资源内容。详见[实际发布结果](PUBLICATION-STATUS.md)。
 
 ## 先理解隔离范围
 

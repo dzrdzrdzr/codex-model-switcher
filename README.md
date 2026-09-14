@@ -2,9 +2,9 @@
 
 **Switch OpenAI / DeepSeek in VS Code Codex without repeatedly editing provider settings.** Keep the normal Codex profile separate from a DeepSeek profile on Windows or a Linux Remote SSH account.
 
-[Download v0.2.8 VSIX](https://github.com/dzrdzrdzr/codex-model-switcher/releases/tag/v0.2.8) · [Marketplace](https://marketplace.visualstudio.com/items?itemName=dzr.codex-local-model-switcher) · [中文](docs/README.zh-CN.md) · [Troubleshooting](docs/TROUBLESHOOTING.md)
+[Website](https://dzrdzrdzr.github.io/codex-model-switcher/) · [Download v0.2.8 VSIX](https://github.com/dzrdzrdzr/codex-model-switcher/releases/tag/v0.2.8) · [Marketplace](https://marketplace.visualstudio.com/items?itemName=dzr.codex-local-model-switcher) · [中文](docs/README.zh-CN.md) · [Troubleshooting](docs/TROUBLESHOOTING.md)
 
-> **Distribution status — 2026-09-14:** v0.2.8 is publicly released on GitHub. Marketplace was verified at v0.2.7; its update is pending publisher authorization. Use the GitHub VSIX for v0.2.8. The website is built but is not deployed; no live Pages site is claimed. [Publication results](docs/PUBLICATION-STATUS.md).
+> **Distribution status — 2026-09-14:** v0.2.8 is publicly released on GitHub. Marketplace was verified at v0.2.7; its update is pending publisher authorization. Use the GitHub VSIX for v0.2.8. The bilingual website is live on GitHub Pages; deployed pages and resources were checked. [Publication results](docs/PUBLICATION-STATUS.md).
 
 ![CI](https://github.com/dzrdzrdzr/codex-model-switcher/actions/workflows/ci.yml/badge.svg)
 

@@ -15,11 +15,17 @@ The [publication workflow](https://github.com/dzrdzrdzr/codex-model-switcher/act
 
 Windows tests actually compiled the C# launcher and ran it against a harmless probe. Linux integration used disposable homes and a mock Codex. These tests do not establish real authenticated OpenAI/DeepSeek calls or full VS Code UI certification. No real user credentials or workspaces were used.
 
-## Not published: GitHub Pages
+## Published: GitHub Pages
 
-[Pages job](https://github.com/dzrdzrdzr/codex-model-switcher/actions/runs/34806936181/job/103860734909): website artifact download succeeded, but enabling Pages returned `Resource not accessible by integration`. Deployment did not run. The workflow therefore has an overall failure despite the successful validation and GitHub release jobs.
+Verified at `2026-09-14T07:34:21Z` (15:34:21 Asia/Singapore).
 
-The built site remains available as `website-0.2.8.zip`. It is not an online website, and no successful search-engine indexing is claimed. Completing deployment requires authorized Pages enablement; code/tests are not the blocker.
+- Live [English homepage](https://dzrdzrdzr.github.io/codex-model-switcher/) and [Chinese homepage](https://dzrdzrdzr.github.io/codex-model-switcher/zh/index.html).
+- [Standalone deployment run 34818138679](https://github.com/dzrdzrdzr/codex-model-switcher/actions/runs/34818138679) completed successfully, deploying main commit `d071801f4ea5cf51d0eca74d641427ec8bc148d3` with `confirm_publish=true`.
+- Existing local Git credential-manager authorization had repository administrator access. The Pages API initially returned 404; enabling this repository with `build_type=workflow` returned 201. No repository visibility, membership, billing or custom domain was changed.
+- Downloaded all 14 deployed files and compared their content with the main-branch site build: all 8 HTML pages (two homepages and six guides), icon, CSS, sitemap, robots.txt, llms.txt and .nojekyll. HTML and image bytes matched exactly; CSS and llms.txt differed only in Windows checkout CRLF versus deployed LF line endings. `npm run check:site` passed 8 pages and 60 local-resource links. Language-switch destinations and both homepage Marketplace installation links were checked.
+- Browser control was unavailable, so this is HTTP content/resource verification, not a browser screenshot or interactive rendering certification. No search-engine indexing is claimed.
+
+The earlier [Pages job](https://github.com/dzrdzrdzr/codex-model-switcher/actions/runs/34806936181/job/103860734909) failed to enable Pages under its integration permissions; the successful standalone deployment resolves that website blocker.
 
 ## Not published: Marketplace update
 
@@ -27,8 +33,18 @@ The built site remains available as `website-0.2.8.zip`. It is not an online web
 
 The anonymous preflight verified the existing `dzr.codex-local-model-switcher` listing and downloaded package at version **0.2.7**. Version **0.2.8** is available from GitHub Releases. Completing the Marketplace update requires publisher authorization, which is separate from GitHub repository access. No credentials should be pasted into public issues or chat.
 
+## Local closeout checks
+
+The public Marketplace query and downloaded package were independently checked at `2026-09-14T07:28:55Z`: the existing identity remains `dzr.codex-local-model-switcher`, version **0.2.7**. No upload was attempted and no new extension was created.
+
+The repository secret-name API returned an empty list. `@vscode/vsce@3.9.2 ls-publishers` completed with no saved publishers, and no process-level publishing token was available. Browser inventory and explicit Edge publisher-page navigation failed at the browser-control connection, including after resetting the control session; no login state or upload capability could be established. GitHub access does not establish Marketplace publisher access. Remaining requirement: an operable authorized publisher session or valid `VSCE_PAT` authorization for the existing extension.
+
+Downloaded the existing v0.2.8 release asset without rebuilding it. SHA-256 matched `9743ea149a03f33e362d8d9ac22e12e1a4163b32e40df1dac615e312f4f903f2`. Against approved source `30f584d0019453f15f40bc58fca5d1cfd327a93c`, `verify-vsix.py` passed the manifest publisher/name/version, all required runtime bytes and the 15-file allowlist. The disposable Windows source checkout's C# file was restored from its exact Git blob to avoid CRLF conversion during the byte comparison. Release assets and the tag were not changed.
+
+Local `npm run verify` passed syntax checks for 12 JavaScript files and 41 tests; the opt-in compiled Windows launcher suite was not run in this closeout. `npm run build:site` and `npm run check:site` passed. No production code or workflow was changed, no replacement VSIX was built, and no real OpenAI/DeepSeek call was made.
+
 ## 中文摘要
 
 已合并主分支并正式发布 GitHub v0.2.8，安装包、源码、网站离线文件和校验和均可下载。验证任务全部通过，Windows 启动器已实际编译和执行，但未使用真实密钥调用模型。
 
-网站启用被 GitHub 权限拦截，商店更新因缺少发布授权而跳过。它们不是已上线状态，也不是等待用户手动验收；剩余阻碍是平台授权。当前安装新版请使用 GitHub 的 v0.2.8 VSIX。没有开展用户招募、私信、自荐邮件或其他对外联系。
+网站已通过本机管理员授权启用并成功部署，线上中英文页面和资源内容已核验。商店仍为 0.2.7：仓库和本机发布工具缺少发布者授权，浏览器控制连接失败，未执行上传；剩余阻碍仅为 Marketplace 发布路径。当前安装新版请使用 GitHub 的 v0.2.8 VSIX。没有开展用户招募、私信、自荐邮件或其他对外联系。
