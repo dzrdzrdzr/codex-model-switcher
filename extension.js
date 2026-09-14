@@ -81,7 +81,9 @@ function runProcess(command, args, options = {}) {
         return;
       }
       if (code !== 0) {
-        const detail = stderr.trim() || `exit code ${code}${signal ? ` (${signal})` : ''}`;
+        const detail = options.sensitiveOutput
+          ? `exit code ${code}${signal ? ` (${signal})` : ''}; sensitive output withheld`
+          : (stderr.trim() || `exit code ${code}${signal ? ` (${signal})` : ''}`);
         reject(new Error(`${path.basename(command)} failed: ${detail}`));
         return;
       }
@@ -111,7 +113,12 @@ function decodeSshTarget(authority) {
 }
 
 function currentTarget() {
-  if (!vscode.env.remoteName) return { kind: 'local', label: 'Local VS Code' };
+  if (!vscode.env.remoteName) {
+    if (process.platform !== 'win32') {
+      throw new Error('Local switching requires Windows. For Linux use VS Code Remote SSH; local macOS/Linux, WSL and containers are not supported.');
+    }
+    return { kind: 'local', label: 'Local VS Code' };
+  }
   if (vscode.env.remoteName !== 'ssh-remote') {
     throw new Error(`This version supports local VS Code and Remote SSH; current remote type is ${vscode.env.remoteName}.`);
   }
@@ -233,7 +240,7 @@ async function refreshStatus(silent = true) {
       status.codexVersion ? `Codex: ${status.codexVersion}` : undefined,
       status.mode === 'deepseek' ? `API Key configured: ${status.apiKeyConfigured ? 'yes' : 'no'}` : undefined,
       '',
-      'Click to switch this VS Code window. No automatic reload or process termination.'
+      'Selection is shared by windows using the same OS account/home. Reload to apply; this status does not verify API connectivity.'
     ].filter(Boolean).join('\n');
     statusItem.backgroundColor = status.mode === 'deepseek' && !status.direct
       ? new vscode.ThemeColor('statusBarItem.warningBackground')
@@ -469,7 +476,7 @@ async function switchMode(mode, repair = false) {
     ? 'DeepSeek will use its native Responses API at https://api.deepseek.com/ with the isolated direct profile.'
     : 'GPT will use the default .codex profile for this environment.';
   const choice = await vscode.window.showWarningMessage(
-    `${action} for ${target.label}? ${detail} The window will not reload automatically.`,
+    `${action} for ${target.label}? ${detail} Windows sharing this account/home share the selection. The window will not reload automatically.`,
     { modal: false },
     action
   );
@@ -502,6 +509,28 @@ async function switchMode(mode, repair = false) {
   }
 }
 
+async function showCurrentStatus() {
+  const status = await refreshStatus(true);
+  if (!status) {
+    output.appendLine('Status unavailable. Check the switcher tooltip for the environment error.');
+    output.show(true);
+    return;
+  }
+  output.appendLine('--- Configured source (not a live API connection test) ---');
+  for (const [name, value] of [
+    ['mode', status.mode], ['target', status.target], ['model', status.model],
+    ['provider', status.provider], ['base_url', status.baseUrl],
+    ['wire_api', status.wireApi], ['codex_home', status.codexHome],
+    ['launcher', status.launcher], ['api_key_configured', status.apiKeyConfigured],
+    ['direct', status.direct], ['codex_version', status.codexVersion]
+  ]) {
+    output.appendLine(`${name}: ${value ?? ''}`);
+  }
+  output.appendLine('scope: OS account/home; shared-home windows share selection');
+  output.appendLine('connectivity: not tested; existing processes retain their environment');
+  output.show(true);
+}
+
 async function showSwitcher() {
   const current = await refreshStatus(true);
   const target = currentTarget();
@@ -522,13 +551,12 @@ async function showSwitcher() {
     { label: 'Reapply Current Setup', description: 'repair launcher/config without automatic reload', command: 'repair' }
   ], {
     title: `Codex Source Switcher · ${target.label}`,
-    placeHolder: 'Choose the model source used by this VS Code window'
+    placeHolder: 'Choose the source for this account/home; reload applies it to new processes'
   });
   if (!picked) return;
   if (picked.mode) return switchMode(picked.mode);
   if (picked.command === 'status') {
-    await refreshStatus(false);
-    output.show(true);
+    await showCurrentStatus();
     return;
   }
   if (picked.command === 'repair') {
@@ -555,7 +583,7 @@ async function activate(context) {
   statusItem.name = 'Codex Direct Source Switcher';
   statusItem.command = 'codexLocalModelSwitcher.switch';
   statusItem.text = '$(sync) Codex: checking';
-  statusItem.tooltip = 'Click to switch GPT / DeepSeek Direct for this VS Code window.';
+  statusItem.tooltip = 'Switch OpenAI / DeepSeek for this account/home. Reload applies the selection.';
   statusItem.show();
 
   context.subscriptions.push(
@@ -565,8 +593,7 @@ async function activate(context) {
     vscode.commands.registerCommand('codexLocalModelSwitcher.useGpt', () => switchMode('gpt')),
     vscode.commands.registerCommand('codexLocalModelSwitcher.useDeepSeek', () => switchMode('deepseek')),
     vscode.commands.registerCommand('codexLocalModelSwitcher.status', async () => {
-      await refreshStatus(false);
-      output.show(true);
+      await showCurrentStatus();
     }),
     vscode.commands.registerCommand('codexLocalModelSwitcher.repair', async () => {
       const current = await refreshStatus(true);
@@ -576,8 +603,7 @@ async function activate(context) {
     vscode.commands.registerCommand('codexModelSwitcher.useGpt', () => switchMode('gpt')),
     vscode.commands.registerCommand('codexModelSwitcher.useDeepSeek', () => switchMode('deepseek')),
     vscode.commands.registerCommand('codexModelSwitcher.status', async () => {
-      await refreshStatus(false);
-      output.show(true);
+      await showCurrentStatus();
     }),
     vscode.commands.registerCommand('codexModelSwitcher.repair', async () => {
       const current = await refreshStatus(true);

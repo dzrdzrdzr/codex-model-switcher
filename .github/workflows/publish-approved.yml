@@ -1,0 +1,159 @@
+name: Publish approved version
+on:
+  push:
+    branches: [main]
+    paths: ['.github/release-request.json']
+  workflow_dispatch:
+    inputs:
+      confirm_publish:
+        description: 'Publish the version recorded in the approved release request'
+        type: boolean
+        required: true
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: publish-approved
+  cancel-in-progress: false
+jobs:
+  request:
+    if: ${{ github.ref == 'refs/heads/main' && (github.event_name == 'push' || inputs.confirm_publish) }}
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.request.outputs.version }}
+      tag: ${{ steps.request.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - id: request
+        run: |
+          node - <<'JS'
+          const fs = require('node:fs');
+          const p = require('./package.json');
+          const r = require('./.github/release-request.json');
+          if (r.version !== p.version || r.publish !== true || !/^\d+\.\d+\.\d+$/.test(r.version)) throw new Error('Invalid or stale release request.');
+          require('./scripts/release-tools').check(p, 'v'+r.version);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `version=${r.version}\ntag=v${r.version}\n`);
+          JS
+  validate:
+    needs: request
+    uses: ./.github/workflows/ci.yml
+    with:
+      ref: ${{ github.sha }}
+  github-release:
+    needs: [request, validate]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: checked-vsix
+          path: dist
+      - uses: actions/download-artifact@v4
+        with:
+          name: checked-source
+          path: source-artifact
+      - uses: actions/download-artifact@v4
+        with:
+          name: website-preview
+          path: _site
+      - name: Verify and publish the exact checked artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ needs.request.outputs.tag }}
+          RELEASE_VERSION: ${{ needs.request.outputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/verify-vsix.py dist/*.vsix
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            echo 'A release already exists; refusing to replace it.' >&2
+            exit 1
+          fi
+          cp source-artifact/checked-source.zip "dist/source-${RELEASE_VERSION}.zip"
+          (cd _site && zip -qr "../dist/website-${RELEASE_VERSION}.zip" .)
+          (cd dist && sha256sum *.zip >> SHA256SUMS)
+          gh release create "$RELEASE_TAG" dist/*.vsix dist/*.zip dist/SHA256SUMS \
+            --target "$GITHUB_SHA" --title "Codex DeepSeek Switcher ${RELEASE_TAG}" \
+            --notes-file "docs/releases/${RELEASE_TAG}.md" --latest
+          gh release view "$RELEASE_TAG" --json url,isDraft,isPrerelease,tagName > dist/github-release-status.json
+          cat dist/github-release-status.json
+  pages:
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: website-preview
+          path: _site
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+          token: ${{ secrets.GH_PAGES_TOKEN || github.token }}
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4
+      - name: Verify public homepage
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          curl --fail --location --retry 4 --retry-delay 5 --max-time 30 "$PAGE_URL" -o /tmp/site.html
+          grep -q 'Codex DeepSeek Switcher' /tmp/site.html
+  marketplace:
+    needs: [request, github-release]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - id: authorization
+        name: Check existing Marketplace publishing authorization
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        shell: bash
+        run: |
+          if [ -n "$VSCE_PAT" ]; then
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+            echo 'Marketplace not published: no VSCE_PAT publishing authorization is configured.' | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/setup-node@v4
+        if: ${{ steps.authorization.outputs.ready == 'true' }}
+        with:
+          node-version: '24'
+      - uses: actions/download-artifact@v4
+        if: ${{ steps.authorization.outputs.ready == 'true' }}
+        with:
+          name: checked-vsix
+          path: dist
+      - name: Verify Marketplace version is older
+        if: ${{ steps.authorization.outputs.ready == 'true' }}
+        run: python3 scripts/marketplace-check.py --require-publishable
+      - name: Publish verified VSIX with the existing publisher identity
+        if: ${{ steps.authorization.outputs.ready == 'true' }}
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/verify-vsix.py dist/*.vsix
+          VSCE_VERSION="$(node -p 'require("./package.json").buildTools.vsce')"
+          npx --yes "@vscode/vsce@${VSCE_VERSION}" publish --packagePath dist/*.vsix </dev/null
+      - name: Read back public Marketplace status
+        if: ${{ steps.authorization.outputs.ready == 'true' }}
+        run: python3 scripts/marketplace-check.py --output dist/marketplace-after-publish.json

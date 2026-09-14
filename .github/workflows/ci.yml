@@ -1,16 +1,18 @@
 name: CI
-
 on:
   push:
     branches: [main]
   pull_request:
-
+  workflow_call:
+    inputs:
+      ref:
+        type: string
+        required: false
 permissions:
   contents: read
-
 jobs:
   node:
-    name: Node checks (${{ matrix.os }})
+    name: JavaScript checks (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -18,31 +20,82 @@ jobs:
         os: [ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.sha }}
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
-      - run: npm run check
-      - run: npm test
-
+          node-version: '24'
+      - run: npm run verify
   remote-helper:
-    name: Remote helper tests
+    name: Linux disposable-home integration
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: bash -n scripts/remote-helper.sh
       - run: bash test/remote-helper.test.sh
-
+      - run: python3 test/remote-edge-cases.py
   package:
-    name: VSIX packaging smoke test
+    name: Check VSIX and website
     runs-on: ubuntu-latest
     needs: [node, remote-helper]
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.sha }}
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
-      - run: mkdir -p dist
-      - run: npx --yes @vscode/vsce@3 package --no-dependencies --out dist/codex-deepseek-switcher.vsix
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Archive checked source
+        run: |
+          mkdir -p dist
+          git archive --format=zip --output=dist/checked-source.zip HEAD
       - uses: actions/upload-artifact@v4
         with:
-          name: codex-deepseek-switcher-vsix
-          path: dist/codex-deepseek-switcher.vsix
+          name: checked-source
+          path: dist/checked-source.zip
+          if-no-files-found: error
+      - run: npm run build:site && npm run check:site
+      - run: npm run package:list && npm run package:vsix
+        env:
+          BUILD_SOURCE_REF: ${{ inputs.ref || github.head_ref || github.sha }}
+      - name: Verify packaged bytes and checksum
+        shell: bash
+        run: python3 scripts/verify-vsix.py dist/*.vsix
+      - uses: actions/upload-artifact@v4
+        with:
+          name: checked-vsix
+          path: |
+            dist/*.vsix
+            dist/SHA256SUMS
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: website-preview
+          path: _site/
+          if-no-files-found: error
+  marketplace-preflight:
+    name: Public Marketplace version check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 scripts/marketplace-check.py --download
+      - uses: actions/upload-artifact@v4
+        with:
+          name: marketplace-preflight
+          path: |
+            dist/marketplace-status.json
+            dist/marketplace-current.vsix
+          if-no-files-found: error

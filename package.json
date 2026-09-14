@@ -1,9 +1,9 @@
 {
   "name": "codex-local-model-switcher",
   "displayName": "Codex DeepSeek Switcher",
-  "description": "Switch OpenAI Codex in VS Code, including ChatGPT-authenticated Codex profiles, between OpenAI and DeepSeek with isolated local and Remote SSH configuration.",
-  "version": "0.2.7",
-  "publisher": "hanzaidao",
+  "description": "Switch OpenAI / DeepSeek in VS Code Codex. Separate provider profiles for Windows and Linux Remote SSH; preserve your normal Codex setup.",
+  "version": "0.2.8",
+  "publisher": "dzr",
   "license": "MIT",
   "icon": "assets/icon.png",
   "repository": {
@@ -15,21 +15,14 @@
   },
   "homepage": "https://github.com/dzrdzrdzr/codex-model-switcher#readme",
   "keywords": [
-    "chatgpt",
-    "chatgpt-codex",
-    "openai",
-    "openai-codex",
     "codex",
-    "codex-cli",
-    "vscode-codex",
-    "codex-provider",
     "deepseek",
-    "deepseek-codex",
-    "responses-api",
+    "openai",
+    "chatgpt",
     "remote-ssh",
     "model-switcher",
-    "ai-coding-agent",
-    "vscode"
+    "ai-coding",
+    "responses-api"
   ],
   "galleryBanner": {
     "color": "#07111f",
@@ -143,10 +136,19 @@
     }
   },
   "scripts": {
-    "test": "node test/config.test.js",
-    "test:remote": "bash test/remote-helper.test.sh",
-    "check": "node --check extension.js && node --check lib/config.js",
+    "check": "node scripts/check.js",
+    "test": "node --test test/*.test.js",
+    "test:remote": "bash test/remote-helper.test.sh && python3 test/remote-edge-cases.py",
     "verify": "npm run check && npm test",
-    "package:vsix": "npx --yes @vscode/vsce@3 package --no-dependencies"
+    "build:site": "node scripts/build-site.js",
+    "check:site": "node scripts/check-site.js",
+    "check:release": "node scripts/release-tools.js check",
+    "package:list": "node scripts/release-tools.js list",
+    "package:vsix": "node scripts/release-tools.js package",
+    "metrics": "node scripts/metrics.js"
+  },
+  "buildTools": {
+    "vsce": "3.9.2",
+    "node": "24"
   }
 }

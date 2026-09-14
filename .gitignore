@@ -7,6 +7,10 @@ Thumbs.db
 node_modules/
 *.vsix
 npm-debug.log*
+dist/
+_site/
+.metrics/
+__pycache__/
 
 # .NET / launcher build output
 bin/

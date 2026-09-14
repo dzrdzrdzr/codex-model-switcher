@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "observed_date": "2026-09-14",
+  "time_precision": "date",
+  "source": "GitHub connector reads",
+  "repository": "dzrdzrdzr/codex-model-switcher",
+  "stars": 1,
+  "forks": 0,
+  "latest_release": {
+    "tag": "v0.2.7",
+    "published_at": "2026-08-20T03:50:05Z",
+    "assets": [
+      {
+        "name": "codex-direct-model-switcher-0.2.7.vsix",
+        "downloads": 0
+      }
+    ]
+  },
+  "traffic": null,
+  "marketplace_installs": null,
+  "notes": [
+    "Initial aggregate baseline; not a user count or a growth promise.",
+    "Download count covers only the listed latest-release asset.",
+    "Observations were made on the recorded day, not at an invented exact timestamp."
+  ],
+  "sources": [
+    "https://api.github.com/repos/dzrdzrdzr/codex-model-switcher",
+    "https://api.github.com/repos/dzrdzrdzr/codex-model-switcher/releases/latest"
+  ]
+}

@@ -268,11 +268,9 @@ cleanup_inputs() {
   shift
   local item
   for item in "$@"; do
-    case "$item" in
-      /tmp/codex-direct-switcher-[A-Za-z0-9-]*.config.toml|/tmp/codex-direct-switcher-[A-Za-z0-9-]*.models.json)
-        rm -f -- "$item"
-        ;;
-    esac
+    if [[ "$item" =~ ^/tmp/codex-direct-switcher-[A-Za-z0-9-]+\.(config\.toml|models\.json)$ ]]; then
+      rm -f -- "$item"
+    fi
   done
 }
 
@@ -315,7 +313,7 @@ body = section.group(2)
 key_line = re.compile(r"(?m)^\s*experimental_bearer_token\s*=.*$")
 replacement = f"experimental_bearer_token = {json.dumps(api_key)}"
 if key_line.search(body):
-    body = key_line.sub(replacement, body, count=1)
+    body = key_line.sub(lambda _: replacement, body, count=1)
 else:
     body = body.rstrip() + "\n" + replacement + "\n"
 
@@ -328,6 +326,17 @@ PY
   chmod 600 "$DEEP_HOME/config.toml"
   printf 'api_key_configured: true\n'
 }
+
+case "$COMMAND" in
+  status|install|ensure-launcher|set-api-key)
+    for dependency in python3 find sort head cut grep sed install chmod ln mkdir cat cp mv date; do
+      if ! command -v "$dependency" >/dev/null 2>&1; then
+        printf 'Missing required command: %s\n' "$dependency" >&2
+        exit 127
+      fi
+    done
+    ;;
+esac
 
 case "$COMMAND" in
   status)
