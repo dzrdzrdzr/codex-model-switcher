@@ -81,3 +81,21 @@ jobs:
           name: website-preview
           path: _site/
           if-no-files-found: error
+  marketplace-preflight:
+    name: Public Marketplace version check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 scripts/marketplace-check.py --download
+      - uses: actions/upload-artifact@v4
+        with:
+          name: marketplace-preflight
+          path: |
+            dist/marketplace-status.json
+            dist/marketplace-current.vsix
+          if-no-files-found: error
