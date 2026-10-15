@@ -1,6 +1,13 @@
 # Changelog
 
-## 0.2.8 (release candidate; not published by this change)
+## 0.2.9
+
+- Add English/Chinese setup answers for DeepSeek in VS Code Codex, keeping GPT configuration and installing on Remote SSH.
+- Replace stale release-status claims in the packaged overview with stable installation links and a separate dated publication record.
+- Link package metadata to the bilingual project website.
+- No changes to extension runtime code, credentials, model catalog, supported platforms or legacy commands.
+
+## 0.2.8
 
 - Align the package publisher with the existing `dzr.codex-local-model-switcher` listing; keep the package name and legacy commands.
 - Put installation, round-trip switching and same-home limits before implementation details in English and Chinese.
@@ -8,7 +15,6 @@
 - Reject unsupported local environments with a useful message; preflight remote dependencies; preserve literal backslashes in helper key replacement.
 - Add configuration, extension, disposable-home, packaging and static-site checks.
 - Prepare a bilingual, tracking-free website, manual Pages deployment, draft-only release workflow and opt-in public metrics snapshot.
-
 
 ## Unreleased
 

@@ -2,7 +2,7 @@
   "name": "codex-local-model-switcher",
   "displayName": "Codex DeepSeek Switcher",
   "description": "Switch OpenAI / DeepSeek in VS Code Codex. Separate provider profiles for Windows and Linux Remote SSH; preserve your normal Codex setup.",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "publisher": "dzr",
   "license": "MIT",
   "icon": "assets/icon.png",
@@ -13,7 +13,7 @@
   "bugs": {
     "url": "https://github.com/dzrdzrdzr/codex-model-switcher/issues"
   },
-  "homepage": "https://github.com/dzrdzrdzr/codex-model-switcher#readme",
+  "homepage": "https://dzrdzrdzr.github.io/codex-model-switcher/",
   "keywords": [
     "codex",
     "deepseek",

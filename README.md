@@ -2,9 +2,7 @@
 
 **Switch OpenAI / DeepSeek in VS Code Codex without repeatedly editing provider settings.** Keep the normal Codex profile separate from a DeepSeek profile on Windows or a Linux Remote SSH account.
 
-[Website](https://dzrdzrdzr.github.io/codex-model-switcher/) · [Download v0.2.8 VSIX](https://github.com/dzrdzrdzr/codex-model-switcher/releases/tag/v0.2.8) · [Marketplace](https://marketplace.visualstudio.com/items?itemName=dzr.codex-local-model-switcher) · [中文](docs/README.zh-CN.md) · [Troubleshooting](docs/TROUBLESHOOTING.md)
-
-> **Distribution status — 2026-09-14:** v0.2.8 is publicly released on GitHub. Marketplace was verified at v0.2.7; its update is pending publisher authorization. Use the GitHub VSIX for v0.2.8. The bilingual website is live on GitHub Pages; deployed pages and resources were checked. [Publication results](docs/PUBLICATION-STATUS.md).
+[Website](https://dzrdzrdzr.github.io/codex-model-switcher/) · [Released VSIX](https://github.com/dzrdzrdzr/codex-model-switcher/releases/latest) · [Marketplace](https://marketplace.visualstudio.com/items?itemName=dzr.codex-local-model-switcher) · [中文](docs/README.zh-CN.md) · [Troubleshooting](docs/TROUBLESHOOTING.md)
 
 ![CI](https://github.com/dzrdzrdzr/codex-model-switcher/actions/workflows/ci.yml/badge.svg)
 
@@ -39,17 +37,13 @@ Connect to the Linux SSH host and install both openai.chatgpt and dzr.codex-loca
 
 ## Install
 
-For **v0.2.8**, download `codex-local-model-switcher-0.2.8.vsix` from the [GitHub release](https://github.com/dzrdzrdzr/codex-model-switcher/releases/tag/v0.2.8), then run **Extensions: Install from VSIX...**, or:
-
-```powershell
-code --install-extension .\codex-local-model-switcher-0.2.8.vsix
-```
-
-The Marketplace extension ID remains **`dzr.codex-local-model-switcher`**. The following command installs the version currently published to Marketplace, which may lag behind GitHub:
+Install the currently published Marketplace version:
 
 ```powershell
 code --install-extension dzr.codex-local-model-switcher
 ```
+
+For a newer VSIX obtained from this repository's [releases](https://github.com/dzrdzrdzr/codex-model-switcher/releases/latest) or a verified maintainer build, use **Extensions: Install from VSIX...** and select the actual downloaded file. The extension ID remains **`dzr.codex-local-model-switcher`**. GitHub source changes, build artifacts, releases and Marketplace updates are separate; consult [dated publication evidence](docs/DISCOVERY-PUBLICATION-20261015.md) rather than assuming the channels match.
 
 For Remote SSH, connect first and install under **SSH: your-host**, not only under Local. Install the OpenAI Codex extension (`openai.chatgpt`) on the same extension host. The [Remote SSH guide](docs/guides.md#remote-ssh) explains the distinction.
 
