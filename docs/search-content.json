@@ -1,0 +1,44 @@
+{
+  "en": {
+    "title": "DeepSeek in VS Code Codex.\nSwitch back to OpenAI.",
+    "description": "Codex DeepSeek Switcher is a VS Code extension for switching OpenAI/GPT and DeepSeek with separate profiles on Windows x64 and Linux Remote SSH. No local relay required.",
+    "faqTitle": "DeepSeek in VS Code Codex: setup and switching FAQ",
+    "faqDescription": "Answers about installing Codex DeepSeek Switcher, keeping your ChatGPT-authenticated profile, Remote SSH, direct Responses API access, supported environments and troubleshooting.",
+    "faqLabel": "Setup and compatibility FAQ",
+    "guideTitles": {
+      "deepseek": "How to use DeepSeek with Codex in VS Code",
+      "openai": "How to switch VS Code Codex back to OpenAI / GPT",
+      "remote-ssh": "How to use DeepSeek with Codex over Remote SSH"
+    },
+    "questions": [
+      {"id":"use-deepseek", "question":"How do I use DeepSeek in the official Codex VS Code extension?", "answer":"Install Codex DeepSeek Switcher (extension ID dzr.codex-local-model-switcher) alongside the OpenAI Codex extension (openai.chatgpt) in the same extension host. Initialize your normal Codex configuration, then run Codex Source: Use DeepSeek Direct. Enter your own DeepSeek API key in the masked prompt when requested, save your work and reload the window. This is an independent companion extension, not an official OpenAI or DeepSeek product.", "guide":"deepseek"},
+      {"id":"keep-gpt", "question":"Can I keep my GPT / ChatGPT-authenticated Codex setup while using DeepSeek?", "answer":"The switcher selects the normal .codex home for OpenAI and .codex-vscode-deepseek for DeepSeek. It does not copy the normal auth.json into the DeepSeek home. Windows using the same OS account and home share one provider choice; this is not per-window isolation. Running processes keep their original environment until restarted. Custom CODEX_HOME layouts are not preserved by these launchers.", "guide":"openai"},
+      {"id":"no-relay", "question":"Does using DeepSeek with Codex require MoonBridge or a local proxy?", "answer":"This extension's direct mode uses https://api.deepseek.com/ with wire_api = responses; no MoonBridge or localhost relay is required. It selects provider profiles rather than translating API protocols. It does not supply a DeepSeek account, API credits, model permissions or network connectivity. A ChatGPT login is not used to authenticate the DeepSeek profile.", "guide":"deepseek"},
+      {"id":"remote-ssh", "question":"Where do I install the switcher for VS Code Remote SSH?", "answer":"Connect to the Linux SSH host and install both openai.chatgpt and dzr.codex-local-model-switcher under SSH: your-host, not only under Local. The remote side needs its own Codex configuration, Bash, Python 3 and GNU utilities. A separate remote home has a separate provider choice; two SSH aliases or NFS mounts sharing one home do not create isolation.", "guide":"remote-ssh"},
+      {"id":"switch-back", "question":"How do I switch from DeepSeek back to OpenAI / GPT?", "answer":"Run Codex Source: Use GPT (OpenAI), save work and reload. This selects the original .codex directory; its existing configuration determines the actual provider. Switching back does not repair a broken original configuration, erase stored DeepSeek credentials or restore the pre-extension executable override. Reapply Current Codex Source Setup is a repair command, not an uninstall command.", "guide":"openai"},
+      {"id":"supported-models", "question":"Is this a universal Codex model switcher for Ollama, Qwen or Claude?", "answer":"No. This implementation targets OpenAI and DeepSeek's native Responses API, with a bundled deepseek-v4-pro / deepseek-v4-flash catalog. Implemented environments are Windows x64 local VS Code and Linux Remote SSH. Local macOS/Linux, WSL, Dev Containers, Codespaces and browser VS Code are not supported. Do not infer support for another provider from an OpenAI-compatible API label.", "guide":"deepseek"},
+      {"id":"verify-connection", "question":"Why does the status say direct: true when my DeepSeek request still fails?", "answer":"Show Current Codex Source Status reports configuration, not live API health. direct: true means the configured endpoint and wire API match direct mode. Test a minimal request in a disposable folder separately, checking network access, model entitlement and account balance; the request may incur charges. Never publish keys or complete configs. The isolated config stores the key in plaintext: masked input is not encryption.", "guide":"deepseek"}
+    ]
+  },
+  "zh": {
+    "title": "在 VS Code Codex 中使用 DeepSeek。\n随时切回 OpenAI。",
+    "description": "Codex DeepSeek Switcher 是在 VS Code Codex 中切换 GPT/OpenAI 与 DeepSeek 的扩展，隔离两套配置，面向 Windows x64 本地和 Linux Remote SSH，无需本地中继。",
+    "faqTitle": "VS Code Codex 切换 DeepSeek：安装、GPT 配置与 SSH 常见问题",
+    "faqDescription": "解答 Codex 如何接入 DeepSeek、怎样保留 ChatGPT 登录配置、Remote SSH 安装位置、直连 Responses API、支持范围与调用失败排查。",
+    "faqLabel": "安装与兼容性常见问题",
+    "guideTitles": {
+      "deepseek": "VS Code 的 Codex 插件怎么接入 DeepSeek",
+      "openai": "Codex 用 DeepSeek 后怎么切回 GPT / OpenAI",
+      "remote-ssh": "VS Code Remote SSH 怎么配置 Codex 和 DeepSeek"
+    },
+    "questions": [
+      {"id":"use-deepseek", "question":"怎么让官方 Codex VS Code 插件使用 DeepSeek？", "answer":"在同一个扩展宿主安装 Codex DeepSeek Switcher（扩展 ID：dzr.codex-local-model-switcher）与 OpenAI Codex（openai.chatgpt）。先初始化原有 Codex 配置，再运行 Codex Source: Use DeepSeek Direct，需要时在遮罩输入框填入自己的 DeepSeek API key，保存工作后重载窗口。这是独立的配套扩展，不是 OpenAI 或 DeepSeek 官方产品。", "guide":"deepseek"},
+      {"id":"keep-gpt", "question":"用 DeepSeek 时，能保留原来的 GPT / ChatGPT 登录配置吗？", "answer":"可以保留两套配置：OpenAI 选择原有 .codex，DeepSeek 使用 .codex-vscode-deepseek；原有 auth.json 不会被复制到 DeepSeek 目录。同一系统账户、同一主目录下的窗口共享模型来源选择，并不是每个窗口独立切换。正在运行的进程要重启才会应用选择；启动器不保留自定义 CODEX_HOME 目录布局。", "guide":"openai"},
+      {"id":"no-relay", "question":"Codex 接入 DeepSeek 还需要 MoonBridge 或本地代理吗？", "answer":"这个扩展的直连模式使用 https://api.deepseek.com/ 和 wire_api = responses，不需要 MoonBridge 或 localhost 中继。它负责选择模型来源配置，不做 API 协议转换，也不提供 DeepSeek 账户、API 额度、模型权限或网络连接。DeepSeek 配置不会使用 ChatGPT 登录凭据认证。", "guide":"deepseek"},
+      {"id":"remote-ssh", "question":"Remote SSH 使用 DeepSeek，插件应该安装在本机还是服务器？", "answer":"先连接 Linux SSH 主机，再把 openai.chatgpt 和 dzr.codex-local-model-switcher 都安装到 SSH: 主机名 分组，而不是只装在 Local。远程端需要自己的 Codex 配置、Bash、Python 3 和 GNU 工具。只有主目录独立时才保存独立选择；指向同一主目录的 SSH 别名或 NFS 挂载不会产生隔离。", "guide":"remote-ssh"},
+      {"id":"switch-back", "question":"从 DeepSeek 怎么切回 GPT / OpenAI？", "answer":"运行 Codex Source: Use GPT (OpenAI)，保存工作并重载。这会选择原有 .codex 目录，实际运行哪个来源仍由该目录的配置决定。切回不会修复原本损坏的配置、删除已保存的 DeepSeek 密钥，也不会恢复安装扩展前的可执行文件覆盖设置。Reapply Current Codex Source Setup 是修复命令，不是卸载命令。", "guide":"openai"},
+      {"id":"supported-models", "question":"这个 Codex 模型切换器也能接 Ollama、Qwen、Claude 吗？", "answer":"当前不能这样理解。这个实现面向 OpenAI 与 DeepSeek 原生 Responses API，内置 deepseek-v4-pro / deepseek-v4-flash 模型目录。实现范围是 Windows x64 本地 VS Code 和 Linux Remote SSH；不支持本地 macOS/Linux、WSL、Dev Containers、Codespaces 或网页 VS Code。不能仅凭其他服务宣称兼容 OpenAI API 就推断这里也支持。", "guide":"deepseek"},
+      {"id":"verify-connection", "question":"状态显示 direct: true，为什么 DeepSeek 还是调用失败？", "answer":"Show Current Codex Source Status 只检查配置，不验证实时 API 是否可用。direct: true 说明端点和协议符合直连模式。需要在可丢弃目录单独发起最小请求，检查网络、模型权限和余额；请求可能产生费用。不要公开密钥或完整配置。隔离配置中的密钥仍是明文，输入框遮罩不等于加密。", "guide":"deepseek"}
+    ]
+  }
+}

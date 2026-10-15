@@ -19,6 +19,24 @@ Windows account                     Linux SSH account (separate home)
 
 This is a **configuration illustration, not a live API demonstration**. Windows sharing the same OS account/home share the selection. SSH aliases or NFS mounts sharing a home also share state. Reloading applies the selection to new processes; running tasks are not hot-swapped.
 
+## Common setup questions
+
+### How do I use DeepSeek in the official Codex VS Code extension?
+
+Install Codex DeepSeek Switcher (extension ID dzr.codex-local-model-switcher) alongside the OpenAI Codex extension (openai.chatgpt) in the same extension host. Initialize your normal Codex configuration, then run Codex Source: Use DeepSeek Direct. Enter your own DeepSeek API key in the masked prompt when requested, save your work and reload the window. This is an independent companion extension, not an official OpenAI or DeepSeek product. [Step-by-step guide](docs/guides.md#deepseek).
+
+### Can I keep my GPT / ChatGPT-authenticated Codex setup while using DeepSeek?
+
+The switcher selects the normal .codex home for OpenAI and .codex-vscode-deepseek for DeepSeek. It does not copy the normal auth.json into the DeepSeek home. Windows using the same OS account and home share one provider choice; this is not per-window isolation. Running processes keep their original environment until restarted. Custom CODEX_HOME layouts are not preserved by these launchers. [Step-by-step guide](docs/guides.md#openai).
+
+### Does using DeepSeek with Codex require MoonBridge or a local proxy?
+
+This extension's direct mode uses https://api.deepseek.com/ with wire_api = responses; no MoonBridge or localhost relay is required. It selects provider profiles rather than translating API protocols. It does not supply a DeepSeek account, API credits, model permissions or network connectivity. A ChatGPT login is not used to authenticate the DeepSeek profile. [Step-by-step guide](docs/guides.md#deepseek).
+
+### Where do I install the switcher for VS Code Remote SSH?
+
+Connect to the Linux SSH host and install both openai.chatgpt and dzr.codex-local-model-switcher under SSH: your-host, not only under Local. The remote side needs its own Codex configuration, Bash, Python 3 and GNU utilities. A separate remote home has a separate provider choice; two SSH aliases or NFS mounts sharing one home do not create isolation. [Step-by-step guide](docs/guides.md#remote-ssh).
+
 ## Install
 
 For **v0.2.8**, download `codex-local-model-switcher-0.2.8.vsix` from the [GitHub release](https://github.com/dzrdzrdzr/codex-model-switcher/releases/tag/v0.2.8), then run **Extensions: Install from VSIX...**, or:
