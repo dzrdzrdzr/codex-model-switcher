@@ -28,7 +28,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - run: npm run build:site && npm run check:site
+      - run: npm run build:site && npm run check:site && python3 scripts/verify-live-discovery.py --prepare
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

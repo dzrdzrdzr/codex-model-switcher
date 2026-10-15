@@ -1,0 +1,85 @@
+name: Publish discovery update once (2026-10-15)
+
+# This exact, user-requested merge is a one-time publication, not ongoing CI deployment.
+# The existing manual Pages and Marketplace approval workflows remain unchanged.
+on:
+  push:
+    branches: [main]
+    paths: ['.github/discovery-publish-20261015.json']
+permissions:
+  contents: read
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  website:
+    if: ${{ github.repository == 'dzrdzrdzr/codex-model-switcher' && contains(github.event.head_commit.message, 'Publish discovery update 2026-10-15') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Validate the exact one-time publication authorization
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          request = json.loads(Path('.github/discovery-publish-20261015.json').read_text())
+          base = '3061208948750ffb543707e580539341ff976ae6'
+          assert request['request_id'] == 'discovery-20261015'
+          assert request['base_sha'] == base
+          assert request['confirm_pages'] is True and request['confirm_indexnow'] is True
+          assert subprocess.check_output(['git', 'rev-parse', 'HEAD^'], text=True).strip() == base
+          PY
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm run verify && npm run build:site && npm run check:site
+      - run: python3 scripts/verify-live-discovery.py --prepare
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - name: Deploy this approved website revision
+        id: deployment
+        uses: actions/deploy-pages@v4
+      - name: Verify public bytes and submit one IndexNow batch
+        run: python3 scripts/verify-live-discovery.py --submit
+      - name: Inspect Marketplace without publishing another release
+        if: ${{ always() && steps.deployment.outcome == 'success' }}
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        shell: bash
+        run: |
+          python3 scripts/marketplace-check.py --download --output dist/marketplace-live.json
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          report = {'publisher_authorization_configured': bool(os.environ.get('VSCE_PAT')),
+                    'published_by_this_job': False}
+          Path('dist/marketplace-authorization-check.json').write_text(json.dumps(report, indent=2) + '\n')
+          print(json.dumps(report))
+          PY
+      - name: Preserve public verification receipts
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: discovery-publication-evidence
+          path: |
+            dist/discovery-publication-evidence.json
+            dist/marketplace-live.json
+            dist/marketplace-authorization-check.json
+          if-no-files-found: warn
