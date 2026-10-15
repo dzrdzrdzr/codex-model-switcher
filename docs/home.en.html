@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Introducing Codex DeepSeek Switcher</title>
+  <meta name="description" content="Switch OpenAI and DeepSeek in VS Code Codex while keeping separate provider profiles. Project overview, installation, Windows and Remote SSH support, and important boundaries.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://dzrdzrdzr.github.io/codex-model-switcher/">
+  <link rel="alternate" hreflang="en" href="https://dzrdzrdzr.github.io/codex-model-switcher/">
+  <link rel="alternate" hreflang="zh-CN" href="https://dzrdzrdzr.github.io/codex-model-switcher/zh/">
+  <link rel="alternate" hreflang="x-default" href="https://dzrdzrdzr.github.io/codex-model-switcher/">
+  <link rel="icon" href="icon.png">
+  <link rel="sitemap" type="application/xml" href="https://dzrdzrdzr.github.io/codex-model-switcher/sitemap.xml">
+  <meta property="og:image" content="https://dzrdzrdzr.github.io/codex-model-switcher/icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Introducing Codex DeepSeek Switcher">
+  <meta property="og:description" content="Switch OpenAI and DeepSeek in VS Code Codex while keeping separate provider profiles. Project overview, installation, Windows and Remote SSH support, and important boundaries.">
+  <meta property="og:url" content="https://dzrdzrdzr.github.io/codex-model-switcher/">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"SoftwareApplication","@id":"https://dzrdzrdzr.github.io/codex-model-switcher/#software","name":"Codex DeepSeek Switcher","url":"https://dzrdzrdzr.github.io/codex-model-switcher/","sameAs":["https://github.com/dzrdzrdzr/codex-model-switcher","https://marketplace.visualstudio.com/items?itemName=dzr.codex-local-model-switcher"],"applicationCategory":"DeveloperApplication","operatingSystem":"Windows x64 (local); Linux (Remote SSH only)","license":"https://github.com/dzrdzrdzr/codex-model-switcher/blob/main/LICENSE"},{"@type":"WebPage","@id":"https://dzrdzrdzr.github.io/codex-model-switcher/#webpage","url":"https://dzrdzrdzr.github.io/codex-model-switcher/","name":"Introducing Codex DeepSeek Switcher","description":"Switch OpenAI and DeepSeek in VS Code Codex while keeping separate provider profiles. Project overview, installation, Windows and Remote SSH support, and important boundaries.","inLanguage":"en","about":{"@id":"https://dzrdzrdzr.github.io/codex-model-switcher/#software"},"mainEntity":{"@id":"https://dzrdzrdzr.github.io/codex-model-switcher/#article"}},{"@type":"TechArticle","@id":"https://dzrdzrdzr.github.io/codex-model-switcher/#article","headline":"Introducing Codex DeepSeek Switcher","description":"Switch OpenAI and DeepSeek in VS Code Codex while keeping separate provider profiles. Project overview, installation, Windows and Remote SSH support, and important boundaries.","inLanguage":"en","dateModified":"2026-10-15","about":{"@id":"https://dzrdzrdzr.github.io/codex-model-switcher/#software"},"mainEntityOfPage":{"@id":"https://dzrdzrdzr.github.io/codex-model-switcher/#webpage"},"author":{"@type":"Person","name":"dzr"},"datePublished":"2026-10-15"}]}</script>
+  <style>
+:root {
+  color-scheme: light;
+  --paper: #fdfcf9;
+  --ink: #20201e;
+  --body: #373733;
+  --muted: #6a6a61;
+  --line: #deddd5;
+  --soft: #f3f2ed;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+* { box-sizing: border-box; }
+html { scroll-padding-top: 28px; }
+body { margin: 0; background: var(--paper); color: var(--body); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-underline-offset: .22em; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible { outline: 2px solid currentColor; outline-offset: 5px; }
+.skip { position: absolute; left: -9999px; }
+.skip:focus { left: 20px; top: 16px; z-index: 10; padding: 10px; background: var(--paper); }
+.masthead { max-width: 1152px; margin: 0 auto; min-height: 88px; padding: 28px 0; display: flex; justify-content: space-between; align-items: center; gap: 20px; border-bottom: 1px solid var(--line); }
+.wordmark { color: var(--ink); font-size: 12px; font-weight: 650; letter-spacing: .085em; text-decoration: none; }
+.masthead nav { display: flex; align-items: center; gap: 28px; color: var(--muted); font-size: 13px; }
+.masthead nav a { text-decoration: none; }
+.masthead nav a:hover { text-decoration: underline; }
+article { padding: 0 24px; }
+.article-head { max-width: 1080px; margin: 0 auto; padding: 80px 0 54px; text-align: center; }
+.meta { margin: 0 0 28px; font-size: 12px; line-height: 1.7; letter-spacing: .1em; color: var(--muted); }
+.meta .separator { padding: 0 13px; color: #a6a599; }
+h1 { margin: 0; color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-size: clamp(39px, 5.1vw, 66px); font-weight: 400; line-height: 1.14; letter-spacing: -.046em; text-wrap: balance; }
+.deck { margin: 27px auto 0; max-width: 760px; color: var(--ink); font-size: 23px; font-weight: 400; line-height: 1.8; text-wrap: balance; }
+.byline { margin: 23px 0 0; color: var(--muted); font-size: 12px; letter-spacing: .045em; line-height: 1.8; }
+.byline a { text-decoration: none; color: var(--ink); }
+.article-body { max-width: 720px; margin: 0 auto; text-align: left; font-size: 17px; line-height: 1.95; letter-spacing: .006em; overflow-wrap: break-word; }
+.article-body p { margin: 0 0 22px; }
+.opening { border-top: 1px solid var(--line); padding-top: 35px; }
+.opening p { color: #30302c; font-size: 18px; line-height: 1.95; }
+.article-body section { margin-top: 44px; }
+h2 { color: var(--ink); font-size: 23px; font-weight: 600; line-height: 1.5; letter-spacing: -.018em; margin: 0 0 19px; }
+strong { font-weight: 600; color: var(--ink); }
+code { font-family: var(--mono); font-size: .86em; overflow-wrap: anywhere; }
+pre { margin: 25px 0; padding: 18px 20px; background: var(--soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); white-space: pre-wrap; overflow-wrap: anywhere; font-size: 14px; line-height: 1.7; }
+pre code { font-size: inherit; }
+.install-note { font-size: 14px; color: var(--muted); line-height: 1.85; }
+.resources { display: flex; flex-wrap: wrap; gap: 10px 27px; margin: 26px 0 0; font-size: 15px; }
+.article-end { border-top: 1px solid var(--line); margin-top: 46px; padding-top: 24px; }
+.article-end p { color: var(--muted); font-size: 13px; line-height: 1.9; }
+footer { max-width: 1152px; padding: 27px 0 40px; margin: 70px auto 0; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 25px; font-size: 12px; color: var(--muted); line-height: 1.8; }
+footer p { margin: 0; }
+footer nav { display: flex; gap: 26px; }
+footer a { text-decoration: none; }
+@media (max-width: 1220px) {
+  .masthead, footer { margin-left: 34px; margin-right: 34px; }
+}
+@media (max-width: 680px) {
+  .masthead { min-height: 76px; margin-left: 22px; margin-right: 22px; padding: 19px 0; gap: 12px; }
+  .wordmark { max-width: 164px; font-size: 10px; line-height: 1.7; letter-spacing: .055em; }
+  .masthead nav { gap: 16px; font-size: 12px; }
+  .masthead .repo-nav { display: none; }
+  article { padding: 0 23px; }
+  .article-head { padding: 52px 0 37px; }
+  .meta { font-size: 10px; margin-bottom: 25px; letter-spacing: .065em; }
+  .meta .separator { padding: 0 8px; }
+  h1 { font-size: clamp(37px, 10.1vw, 55px); line-height: 1.1; letter-spacing: -.043em; }
+  .deck { font-size: 18px; line-height: 1.85; margin-top: 24px; max-width: 380px; }
+  .byline { font-size: 11px; margin-top: 19px; }
+  .opening { padding-top: 28px; }
+  .article-body, .opening p { font-size: 16px; line-height: 1.95; }
+  .article-body p { margin-bottom: 19px; }
+  h2 { font-size: 21px; margin-bottom: 16px; }
+  .article-body section { margin-top: 35px; }
+  pre { font-size: 12px; padding: 15px 14px; }
+  .resources { gap: 12px 24px; font-size: 14px; }
+  footer { margin: 49px 23px 0; padding-top: 22px; display: block; }
+  footer nav { margin-top: 15px; }
+}
+@media print {
+  body { background: white; color: black; }
+  .masthead, footer, .skip { display: none; }
+  .article-head { padding-top: 25px; }
+  .article-body { max-width: none; font-size: 11pt; }
+  h2 { break-after: avoid; }
+  p { orphans: 3; widows: 3; }
+  pre { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#article">Skip to content</a>
+<header class="masthead">
+  <a class="wordmark" href="#top">CODEX DEEPSEEK SWITCHER</a>
+  <nav aria-label="Main navigation">
+    <a class="repo-nav" href="https://github.com/dzrdzrdzr/codex-model-switcher">GitHub</a>
+    <a href="#install">Install</a>
+    <a href="deepseek.html">Guide</a>
+  </nav>
+</header>
+<main id="top">
+<article aria-labelledby="title">
+  <header class="article-head">
+    <p class="meta">PROJECT OVERVIEW<span class="separator" aria-hidden="true">/</span><time datetime="2026-10-15">OCTOBER 15, 2026</time></p>
+    <h1 id="title">Codex DeepSeek Switcher</h1>
+    <p class="deck">Use DeepSeek in the Codex you know.<br>Keep your existing OpenAI configuration.</p>
+    <p class="byline">By dzr <span class="separator" aria-hidden="true">·</span> An independent open-source project</p>
+  </header>
+  <div class="article-body" id="article">
+<div class="opening">
+<p><strong>Codex DeepSeek Switcher</strong> is an independent, open-source extension for VS Code. It lets you switch between your existing OpenAI / GPT configuration and a separate DeepSeek configuration without repeatedly editing provider settings or rebuilding your development environment.</p>
+<p>The project has a narrow purpose: keep the Codex workflow you already know, while making provider selection more direct. It is a companion to Codex, not another editor, and not an official OpenAI or DeepSeek product.</p>
+</div>
+<section aria-labelledby="why"><h2 id="why">Why this tool exists</h2>
+<p>Trying another model should not require repeatedly overwriting the configuration you already use. The practical questions are how to preserve the existing sign-in and settings, how to select your own DeepSeek API credentials, and how to return to the original environment.</p>
+<p>Codex DeepSeek Switcher addresses these questions with separate configuration directories. You continue working in the existing Codex extension. The switcher selects the appropriate profile, and newly started processes use that selection after the window is reloaded.</p>
+</section>
+<section aria-labelledby="profiles"><h2 id="profiles">Switch providers. Keep your configuration.</h2>
+<p>Selecting OpenAI uses the normal <code>.codex</code> directory. Selecting DeepSeek uses the separate <code>.codex-vscode-deepseek</code> directory. The original <code>auth.json</code> is not copied into the DeepSeek home; DeepSeek uses your own API credentials.</p>
+<p>The current direct configuration points to <code>api.deepseek.com</code> and uses the Responses API, without MoonBridge or a local relay. The extension manages provider profiles. It does not translate API protocols, supply model accounts or provide API credits.</p>
+<p>To return, run <code>Codex Source: Use GPT (OpenAI)</code> and reload. This selects the original configuration directory; its existing contents still determine which provider actually runs.</p>
+</section>
+<section aria-labelledby="environments"><h2 id="environments">Local development and Remote SSH</h2>
+<p>The implementation targets Windows x64 local VS Code and VS Code Remote SSH connected to a Linux host. For remote use, install both the switcher and the OpenAI Codex extension on the SSH extension host, not only on your local computer.</p>
+<p>Provider selection is scoped to the operating-system account's home directory. Separate local and remote homes can keep separate choices. Editor windows, SSH aliases or NFS mounts sharing the same home share the provider choice. This is not per-window isolation, and running tasks are not hot-swapped.</p>
+</section>
+<section aria-labelledby="install"><h2 id="install">Getting started</h2>
+<p>Install the OpenAI Codex extension, <code>openai.chatgpt</code>, on the appropriate local or remote extension host, and initialize your existing Codex configuration. Then install <code>dzr.codex-local-model-switcher</code> from the Marketplace, or run:</p>
+<pre><code>code --install-extension dzr.codex-local-model-switcher</code></pre>
+<p>Save your work and run <code>Codex Source: Use DeepSeek Direct</code>. Enter your own DeepSeek API key in the masked prompt when requested, then reload the window. Inspect the configuration with <code>Codex Source: Show Current Codex Source Status</code>.</p>
+<p>A configuration check does not establish that a live request will succeed. Test a minimal request in a disposable folder separately, checking connectivity, model access and account balance. Model requests may incur provider charges.</p>
+<p class="install-note">Marketplace, GitHub Releases and development branches can carry different versions. For a newer VSIX, use “Extensions: Install from VSIX...” and select the actual downloaded file. Consult the <a href="https://github.com/dzrdzrdzr/codex-model-switcher/blob/main/docs/DISCOVERY-PUBLICATION-20261015.md">dated publication record</a>.</p>
+<p class="install-note">Read the step-by-step guides to <a href="deepseek.html">use DeepSeek</a>, <a href="openai.html">switch back to OpenAI</a>, or <a href="remote-ssh.html">set up Remote SSH</a>.</p>
+</section>
+<section aria-labelledby="boundaries"><h2 id="boundaries">Important boundaries</h2>
+<p>The current implementation does not support local macOS / Linux, WSL, Dev Containers, Codespaces or browser VS Code. It is not a universal switcher for arbitrary model providers. The launchers locate the binary bundled with the Codex extension and do not preserve custom <code>CODEX_HOME</code> layouts.</p>
+<p><strong>The DeepSeek API key is stored in plaintext in the isolated configuration file.</strong> Masked input is not encryption. Switching back does not erase credentials or retained backups. The derived configuration may also retain unrelated provider / MCP values from the source profile. Never publish complete configurations, authentication files or unredacted logs.</p>
+<p>Setup changes <code>chatgpt.cliExecutable</code>; remote setup also changes a VS Code Server compatibility setting. When removing the switcher, follow the project guide to restore the original settings rather than deleting <code>.codex</code>. See the <a href="https://github.com/dzrdzrdzr/codex-model-switcher/blob/main/docs/PRIVACY.md">privacy and security notes</a> and the <a href="https://github.com/dzrdzrdzr/codex-model-switcher/blob/main/docs/guides.md">usage guide</a>.</p>
+</section>
+<section aria-labelledby="source"><h2 id="source">Open source and future updates</h2>
+<p>The source is available under the MIT license. Implementation details, usage guides, troubleshooting and version history are maintained in the public repository. Read the source before installing and evaluate whether the tool fits your environment.</p>
+<p>Future versions are defined by the actual GitHub and Marketplace releases. This article introduces the project; it does not assert successful live model calls on every client version or treat a website update as a new extension release.</p>
+<nav class="resources" aria-label="Project resources"><a href="https://marketplace.visualstudio.com/items?itemName=dzr.codex-local-model-switcher">Install extension</a><a href="https://github.com/dzrdzrdzr/codex-model-switcher">View source</a><a href="https://github.com/dzrdzrdzr/codex-model-switcher/releases/latest">Releases</a><a href="faq.html">FAQ</a></nav>
+</section>
+<div class="article-end"><p>An independent community project, not affiliated with or endorsed by OpenAI, DeepSeek or Microsoft. This page adds no visitor-tracking scripts, promotional popups or third-party font requests.</p></div>
+</div>
+</article>
+</main>
+<footer>
+  <p>Codex DeepSeek Switcher <span aria-hidden="true"> / </span> Independent. Open source.</p>
+  <nav aria-label="Footer navigation"><a href="https://github.com/dzrdzrdzr/codex-model-switcher/blob/main/LICENSE">MIT</a><a href="https://github.com/dzrdzrdzr/codex-model-switcher/blob/main/docs/PRIVACY.md">Privacy</a><a href="#top">Back to top ↑</a></nav>
+</footer>
+</body>
+</html>
