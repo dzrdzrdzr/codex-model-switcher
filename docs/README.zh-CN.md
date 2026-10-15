@@ -2,7 +2,7 @@
 
 **在 VS Code Codex 中切换 OpenAI / DeepSeek，不必反复手改模型来源配置。** 原有 Codex 与 DeepSeek 使用不同配置目录；Windows 本地与拥有独立主目录的 Linux SSH 账户分别保存选择。
 
-[项目网站](https://dzrdzrdzr.github.io/codex-model-switcher/zh/index.html) · [下载 v0.2.8 VSIX](https://github.com/dzrdzrdzr/codex-model-switcher/releases/tag/v0.2.8) · [商店页面](https://marketplace.visualstudio.com/items?itemName=dzr.codex-local-model-switcher) · [English](../README.md) · [故障排查](TROUBLESHOOTING.md)
+[项目网站](https://dzrdzrdzr.github.io/codex-model-switcher/zh/) · [下载 v0.2.8 VSIX](https://github.com/dzrdzrdzr/codex-model-switcher/releases/tag/v0.2.8) · [商店页面](https://marketplace.visualstudio.com/items?itemName=dzr.codex-local-model-switcher) · [English](../README.md) · [故障排查](TROUBLESHOOTING.md)
 
 > **发布状态（2026-09-14）：** v0.2.8 已在 GitHub 正式发布。核对时商店仍为 v0.2.7，更新尚缺发布者授权；安装 v0.2.8 请使用 GitHub 的 VSIX。中英文网站已在 GitHub Pages 上线，已核对线上页面和资源内容。详见[实际发布结果](PUBLICATION-STATUS.md)。
 
@@ -16,6 +16,24 @@ DeepSeek → .codex-vscode-deepseek DeepSeek → .codex-vscode-deepseek
 ```
 
 这是配置关系示意，不是实际 API 调用截图。**同一操作系统账户、同一主目录下的窗口共享选择，不是每个窗口独立。** 两个 SSH 别名或 NFS 主目录也可能实际共用状态。重载后新进程才应用选择，不会热切换正在运行的任务。
+
+## Codex 接入 DeepSeek：常见问题
+
+### 怎么让官方 Codex VS Code 插件使用 DeepSeek？
+
+在同一个扩展宿主安装 Codex DeepSeek Switcher（扩展 ID：dzr.codex-local-model-switcher）与 OpenAI Codex（openai.chatgpt）。先初始化原有 Codex 配置，再运行 Codex Source: Use DeepSeek Direct，需要时在遮罩输入框填入自己的 DeepSeek API key，保存工作后重载窗口。这是独立的配套扩展，不是 OpenAI 或 DeepSeek 官方产品。 [操作指南](guides.md#deepseek).
+
+### 用 DeepSeek 时，能保留原来的 GPT / ChatGPT 登录配置吗？
+
+可以保留两套配置：OpenAI 选择原有 .codex，DeepSeek 使用 .codex-vscode-deepseek；原有 auth.json 不会被复制到 DeepSeek 目录。同一系统账户、同一主目录下的窗口共享模型来源选择，并不是每个窗口独立切换。正在运行的进程要重启才会应用选择；启动器不保留自定义 CODEX_HOME 目录布局。 [操作指南](guides.md#openai).
+
+### Codex 接入 DeepSeek 还需要 MoonBridge 或本地代理吗？
+
+这个扩展的直连模式使用 https://api.deepseek.com/ 和 wire_api = responses，不需要 MoonBridge 或 localhost 中继。它负责选择模型来源配置，不做 API 协议转换，也不提供 DeepSeek 账户、API 额度、模型权限或网络连接。DeepSeek 配置不会使用 ChatGPT 登录凭据认证。 [操作指南](guides.md#deepseek).
+
+### Remote SSH 使用 DeepSeek，插件应该安装在本机还是服务器？
+
+先连接 Linux SSH 主机，再把 openai.chatgpt 和 dzr.codex-local-model-switcher 都安装到 SSH: 主机名 分组，而不是只装在 Local。远程端需要自己的 Codex 配置、Bash、Python 3 和 GNU 工具。只有主目录独立时才保存独立选择；指向同一主目录的 SSH 别名或 NFS 挂载不会产生隔离。 [操作指南](guides.md#remote-ssh).
 
 ## 安装
 
