@@ -49,7 +49,7 @@ Keep documentation accurate for these search contexts: OpenAI Codex, Codex CLI, 
 
 - Canonical Marketplace identity is `dzr.codex-local-model-switcher`; older `hanzaidao` VSIX installs are a distinct identity, not an automatic migration.
 - Keep OS-account/home isolation claims accurate. Do not imply per-window independence, encrypted key storage or live API validation from a status check.
-- Website sources are `docs/site-content.json` and `docs/site.css`; build into `_site/` with `npm run build:site`, then `npm run check:site`.
+- The English article homepage is authored in `docs/home.en.html` (inline CSS, English-only visible copy). Other pages use `docs/site-content.json`, `docs/search-content.json` and `docs/site.css`. Preserve the existing guide/FAQ URLs; build into `_site/` with `npm run build:site`, then `npm run check:site`.
 - Run `npm run verify`, `npm run test:remote` on Linux, package with `npm run package:vsix`, and inspect the archive with `scripts/verify-vsix.py`.
 - Test only with temporary homes and fake credentials. Never claim fixture tests are live model calls.
 - Release preparation makes drafts only. Website deployment and Marketplace publication are separate explicit actions.
