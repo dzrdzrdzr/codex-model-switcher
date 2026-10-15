@@ -2,9 +2,7 @@
 
 **在 VS Code Codex 中切换 OpenAI / DeepSeek，不必反复手改模型来源配置。** 原有 Codex 与 DeepSeek 使用不同配置目录；Windows 本地与拥有独立主目录的 Linux SSH 账户分别保存选择。
 
-[项目网站](https://dzrdzrdzr.github.io/codex-model-switcher/zh/) · [下载 v0.2.8 VSIX](https://github.com/dzrdzrdzr/codex-model-switcher/releases/tag/v0.2.8) · [商店页面](https://marketplace.visualstudio.com/items?itemName=dzr.codex-local-model-switcher) · [English](../README.md) · [故障排查](TROUBLESHOOTING.md)
-
-> **发布状态（2026-09-14）：** v0.2.8 已在 GitHub 正式发布。核对时商店仍为 v0.2.7，更新尚缺发布者授权；安装 v0.2.8 请使用 GitHub 的 VSIX。中英文网站已在 GitHub Pages 上线，已核对线上页面和资源内容。详见[实际发布结果](PUBLICATION-STATUS.md)。
+[项目网站](https://dzrdzrdzr.github.io/codex-model-switcher/zh/) · [已发布的 VSIX](https://github.com/dzrdzrdzr/codex-model-switcher/releases/latest) · [商店页面](https://marketplace.visualstudio.com/items?itemName=dzr.codex-local-model-switcher) · [English](../README.md) · [故障排查](TROUBLESHOOTING.md)
 
 ## 先理解隔离范围
 
@@ -37,17 +35,13 @@ DeepSeek → .codex-vscode-deepseek DeepSeek → .codex-vscode-deepseek
 
 ## 安装
 
-安装 **v0.2.8**：从 [GitHub Release](https://github.com/dzrdzrdzr/codex-model-switcher/releases/tag/v0.2.8) 下载 `codex-local-model-switcher-0.2.8.vsix`，在扩展面板选择 **Extensions: Install from VSIX...（从 VSIX 安装）**，或运行：
-
-```powershell
-code --install-extension .\codex-local-model-switcher-0.2.8.vsix
-```
-
-扩展名称仍为 **Codex DeepSeek Switcher**，商店 ID 仍为 **`dzr.codex-local-model-switcher`**。下面的命令安装商店当前已发布版本，可能落后于 GitHub：
+安装商店当前已发布版本：
 
 ```powershell
 code --install-extension dzr.codex-local-model-switcher
 ```
+
+使用从本仓库的 [Release](https://github.com/dzrdzrdzr/codex-model-switcher/releases/latest) 或维护者验证构建获得的较新 VSIX 时，在扩展面板运行 **Extensions: Install from VSIX...（从 VSIX 安装）**，选择实际下载的文件。扩展 ID 始终为 **`dzr.codex-local-model-switcher`**。源码、构建产物、GitHub Release 和商店更新是不同环节；版本是否一致以[带日期的发布核验记录](DISCOVERY-PUBLICATION-20261015.md)为准。
 
 远程使用时，先连接 SSH，在扩展面板的 **SSH: 主机名** 下安装本扩展与 OpenAI Codex 扩展 `openai.chatgpt`；只装在 Local 下不够。安装包文件名以实际下载结果为准，开发分支版本或 GitHub 发布不代表商店已经同步更新。
 
